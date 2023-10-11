@@ -127,14 +127,17 @@ namespace PawnAdjust
                 {
                     DrawHeadTypeSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allHeadTypes[i]);
                     // Handle Row/Column Position.
-                    if ((i + 1) % 5 == 0)
+                    if (i + 1 < allHeadTypes.Count())
                     {
-                        abCurY += 80f;
-                        abCurX = 0f;
-                    }
-                    else
-                    {
-                        abCurX += 80f;
+                        if ((i + 1) % 5 == 0)
+                        {
+                            abCurY += 80f;
+                            abCurX = 0f;
+                        }
+                        else
+                        {
+                            abCurX += 80f;
+                        }
                     }
                 }
                 SetSectionHeight(selectorString, abCurY + 80f);
@@ -255,14 +258,17 @@ namespace PawnAdjust
                 {
                     DrawBodyTypeSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allBodyTypes[i]);
                     // Handle Row/Column Position.
-                    if ((i + 1) % 5 == 0)
+                    if (i + 1 < allBodyTypes.Count())
                     {
-                        abCurY += 80f;
-                        abCurX = 0f;
-                    }
-                    else
-                    {
-                        abCurX += 80f;
+                        if ((i + 1) % 5 == 0)
+                        {
+                            abCurY += 80f;
+                            abCurX = 0f;
+                        }
+                        else
+                        {
+                            abCurX += 80f;
+                        }
                     }
                 }
                 SetSectionHeight(selectorString, abCurY + 80f);
@@ -356,14 +362,17 @@ namespace PawnAdjust
                 {
                     DrawHairStyleSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allHairStyles[i]);
                     // Handle Row/Column Position.
-                    if ((i + 1) % 5 == 0)
+                    if (i + 1 < allHairStyles.Count())
                     {
-                        abCurY += 80f;
-                        abCurX = 0f;
-                    }
-                    else
-                    {
-                        abCurX += 80f;
+                        if ((i + 1) % 5 == 0)
+                        {
+                            abCurY += 80f;
+                            abCurX = 0f;
+                        }
+                        else
+                        {
+                            abCurX += 80f;
+                        }
                     }
                 }
                 SetSectionHeight(selectorString, abCurY + 80f);
@@ -382,7 +391,7 @@ namespace PawnAdjust
             MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
             Material material = (false ? TexUI.GrayscaleGUI : null);
             GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
-            GUI.color = color;
+            GUI.color = SelPawn.story.HairColor;
             Widgets.DefIcon(inRect, hair, color: SelPawn.story.HairColor);
             GUI.color = Color.white;
             if (Mouse.IsOver(inRect))
@@ -447,14 +456,17 @@ namespace PawnAdjust
                 {
                     DrawBeardStyleSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allBeardStyles[i]);
                     // Handle Row/Column Position.
-                    if ((i + 1) % 5 == 0)
+                    if (i + 1 < allBeardStyles.Count())
                     {
-                        abCurY += 80f;
-                        abCurX = 0f;
-                    }
-                    else
-                    {
-                        abCurX += 80f;
+                        if ((i + 1) % 5 == 0)
+                        {
+                            abCurY += 80f;
+                            abCurX = 0f;
+                        }
+                        else
+                        {
+                            abCurX += 80f;
+                        }
                     }
                 }
                 SetSectionHeight(selectorString, abCurY + 80f);
@@ -473,7 +485,7 @@ namespace PawnAdjust
             MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
             Material material = (false ? TexUI.GrayscaleGUI : null);
             GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
-            GUI.color = color;
+            GUI.color = SelPawn.story.HairColor;
             Widgets.DefIcon(inRect, beard, color: SelPawn.story.HairColor);
             GUI.color = Color.white;
             if (Mouse.IsOver(inRect))
@@ -538,14 +550,17 @@ namespace PawnAdjust
                 {
                     DrawTattooStyleSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allTattooStyles[i]);
                     // Handle Row/Column Position.
-                    if ((i + 1) % 5 == 0)
+                    if (i + 1 < allTattooStyles.Count())
                     {
-                        abCurY += 80f;
-                        abCurX = 0f;
-                    }
-                    else
-                    {
-                        abCurX += 80f;
+                        if ((i + 1) % 5 == 0)
+                        {
+                            abCurY += 80f;
+                            abCurX = 0f;
+                        }
+                        else
+                        {
+                            abCurX += 80f;
+                        }
                     }
                 }
                 SetSectionHeight(selectorString, abCurY + 80f);
@@ -629,14 +644,17 @@ namespace PawnAdjust
                 {
                     DrawBodyTattooStyleSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allTattooStyles[i]);
                     // Handle Row/Column Position.
-                    if ((i + 1) % 5 == 0)
+                    if (i + 1 < allTattooStyles.Count())
                     {
-                        abCurY += 80f;
-                        abCurX = 0f;
-                    }
-                    else
-                    {
-                        abCurX += 80f;
+                        if ((i + 1) % 5 == 0)
+                        {
+                            abCurY += 80f;
+                            abCurX = 0f;
+                        }
+                        else
+                        {
+                            abCurX += 80f;
+                        }
                     }
                 }
                 SetSectionHeight(selectorString, abCurY + 80f);
