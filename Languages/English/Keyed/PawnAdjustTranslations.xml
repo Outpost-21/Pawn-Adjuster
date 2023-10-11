@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LanguageData>
+
+	<PawnAdjust.PawnAdjust>Adjust</PawnAdjust.PawnAdjust>
+	<PawnAdjust.Selector_HeadType>Head Type</PawnAdjust.Selector_HeadType>
+	<PawnAdjust.Selector_BodyType>Body Type</PawnAdjust.Selector_BodyType>
+	<PawnAdjust.Selector_SkinColour>Skin Color</PawnAdjust.Selector_SkinColour>
+	<PawnAdjust.Selector_HairStyle>Hair Style</PawnAdjust.Selector_HairStyle>
+	<PawnAdjust.Selector_BeardStyle>Beard Style</PawnAdjust.Selector_BeardStyle>
+	<PawnAdjust.Selector_HairColour>Body Type</PawnAdjust.Selector_HairColour>
+	<PawnAdjust.Selector_TattooStyle>Tattoo Style</PawnAdjust.Selector_TattooStyle>
+	<PawnAdjust.Selector_QuickCheats>Quick Cheats</PawnAdjust.Selector_QuickCheats>
+
+</LanguageData>
