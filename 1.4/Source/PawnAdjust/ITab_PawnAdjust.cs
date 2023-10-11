@@ -17,7 +17,11 @@ namespace PawnAdjust
         public Vector2 optionsScrollPosition;
         public float optionsViewRectHeight;
 
-        public Dictionary<string, Texture2D> cachedTextures = new Dictionary<string, Texture2D>();
+        public Dictionary<string, Texture2D> cachedHeadTextures = new Dictionary<string, Texture2D>();
+        public Dictionary<string, Texture2D> cachedBodyTextures = new Dictionary<string, Texture2D>();
+        public Dictionary<string, Texture2D> cachedHairTextures = new Dictionary<string, Texture2D>();
+        public Dictionary<string, Texture2D> cachedBeardTextures = new Dictionary<string, Texture2D>();
+        public Dictionary<string, Texture2D> cachedTattooTextures = new Dictionary<string, Texture2D>();
 
         public Dictionary<string, float> sectionHeights = new Dictionary<string, float>();
 
@@ -98,6 +102,7 @@ namespace PawnAdjust
             DoSelector_HairStyle(listing);
             DoSelector_BeardStyle(listing);
             DoSelector_TattooStyle(listing);
+            DoSelector_BodyTattooStyle(listing);
             DoSelector_RoyalTitle(listing);
             DoSelector_Ideoligion(listing);
             DoSelector_QuickCheats(listing);
@@ -127,7 +132,7 @@ namespace PawnAdjust
                         abCurY += 80f;
                         abCurX = 0f;
                     }
-                    else if (i == allHeadTypes.Count())
+                    else
                     {
                         abCurX += 80f;
                     }
@@ -153,7 +158,7 @@ namespace PawnAdjust
             GUI.color = Color.white;
             if (Mouse.IsOver(inRect))
             {
-                TipSignal tip = string.Format("{0}", head.label.CapitalizeFirst() ?? string.Empty);
+                TipSignal tip = string.Format("{0}", head.label.CapitalizeFirst() ?? head.defName);
                 TooltipHandler.TipRegion(inRect, tip);
             }
             if (Widgets.ButtonInvisible(inRect))
@@ -175,18 +180,18 @@ namespace PawnAdjust
                 GUI.color = Color.white.SaturationChanged(0f);
             }
             rect.position += new Vector2(-rect.size.x, -rect.size.y);
+            GUI.color = SelPawn.story.SkinColor;
             Widgets.DrawTextureFitted(rect, GetHeadTexture(def), 1f * 0.85f, Vector2.one, new Rect(0f, 0f, 1f, 1f), 0, buttonMat);
             rect.position += new Vector2(rect.size.x, 0f);
             GUI.color = Color.white;
         }
-
         public Texture2D GetHeadTexture(HeadTypeDef def)
         {
-            if (!cachedTextures.ContainsKey(def.defName))
+            if (!cachedHeadTextures.ContainsKey(def.defName))
             {
-                cachedTextures.Add(def.defName, (Texture2D)def.GetGraphic(SelPawn.story.SkinColor).MatSouth.mainTexture ?? BaseContent.BadTex);
+                cachedHeadTextures.Add(def.defName, (Texture2D)def.GetGraphic(SelPawn.story.SkinColor).MatSouth.mainTexture ?? BaseContent.BadTex);
             }
-            return cachedTextures[def.defName];
+            return cachedHeadTextures[def.defName];
         }
 
         public IEnumerable<HeadTypeDef> GetAllCompatibleHeadTypes()
@@ -241,21 +246,21 @@ namespace PawnAdjust
             SetSectionOpen(selectorString, selectorOpen);
             if (!selectorOpen)
             {
-                List<BodyTypeDef> allHeadTypes = GetAllCompatibleBodyTypes().ToList();
-                allHeadTypes.SortBy(gd => gd.defName);
+                List<BodyTypeDef> allBodyTypes = GetAllCompatibleBodyTypes().ToList();
+                allBodyTypes.SortBy(gd => gd.defName);
                 Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
                 float abCurY = 0f;
                 float abCurX = 0f;
-                for (int i = 0; i < allHeadTypes.Count(); i++)
+                for (int i = 0; i < allBodyTypes.Count(); i++)
                 {
-                    DrawBodyTypeSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allHeadTypes[i]);
+                    DrawBodyTypeSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allBodyTypes[i]);
                     // Handle Row/Column Position.
                     if ((i + 1) % 5 == 0)
                     {
                         abCurY += 80f;
                         abCurX = 0f;
                     }
-                    else if (i == allHeadTypes.Count())
+                    else
                     {
                         abCurX += 80f;
                     }
@@ -281,7 +286,7 @@ namespace PawnAdjust
             GUI.color = Color.white;
             if (Mouse.IsOver(inRect))
             {
-                TipSignal tip = string.Format("{0}", body.label.CapitalizeFirst() ?? string.Empty);
+                TipSignal tip = string.Format("{0}", body.label.CapitalizeFirst() ?? body.defName);
                 TooltipHandler.TipRegion(inRect, tip);
             }
             if (Widgets.ButtonInvisible(inRect))
@@ -303,6 +308,7 @@ namespace PawnAdjust
                 GUI.color = Color.white.SaturationChanged(0f);
             }
             rect.position += new Vector2(-rect.size.x, -rect.size.y);
+            GUI.color = SelPawn.story.SkinColor;
             Widgets.DrawTextureFitted(rect, GetBodyTexture(def), 1f * 0.85f, Vector2.one, new Rect(0f, 0f, 1f, 1f), 0, buttonMat);
             rect.position += new Vector2(rect.size.x, 0f);
             GUI.color = Color.white;
@@ -310,11 +316,11 @@ namespace PawnAdjust
 
         public Texture2D GetBodyTexture(BodyTypeDef def)
         {
-            if (!cachedTextures.ContainsKey(def.defName))
+            if (!cachedBodyTextures.ContainsKey(def.defName))
             {
-                cachedTextures.Add(def.defName, (Texture2D)GraphicDatabase.Get<Graphic_Multi>(def.bodyNakedGraphicPath, ShaderDatabase.Cutout, new Vector2(1f, 1f), SelPawn.story.SkinColor).MatSouth.mainTexture ?? BaseContent.BadTex);
+                cachedBodyTextures.Add(def.defName, (Texture2D)GraphicDatabase.Get<Graphic_Multi>(def.bodyNakedGraphicPath, ShaderDatabase.Cutout, new Vector2(1f, 1f), SelPawn.story.SkinColor).MatSouth.mainTexture ?? BaseContent.BadTex);
             }
-            return cachedTextures[def.defName];
+            return cachedBodyTextures[def.defName];
         }
 
         public IEnumerable<BodyTypeDef> GetAllCompatibleBodyTypes()
@@ -335,7 +341,89 @@ namespace PawnAdjust
 
         public void DoSelector_HairStyle(Listing_Standard listing)
         {
+            string selectorString = "Selector_HairStyle";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_HairStyle".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
+            {
+                List<HairDef> allHairStyles = GetAllCompatibleHairStyles().ToList();
+                allHairStyles.SortBy(gd => gd.defName);
+                Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
+                float abCurY = 0f;
+                float abCurX = 0f;
+                for (int i = 0; i < allHairStyles.Count(); i++)
+                {
+                    DrawHairStyleSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allHairStyles[i]);
+                    // Handle Row/Column Position.
+                    if ((i + 1) % 5 == 0)
+                    {
+                        abCurY += 80f;
+                        abCurX = 0f;
+                    }
+                    else
+                    {
+                        abCurX += 80f;
+                    }
+                }
+                SetSectionHeight(selectorString, abCurY + 80f);
+                listing.EndSection(headTypeListing);
+            }
+        }
 
+        public void DrawHairStyleSelector(Rect rect, Listing_Standard listing, HairDef hair)
+        {
+            Color color = Color.white;
+            Rect inRect = new Rect(rect.x + ((rect.width / 2f) - (75f / 2f)), rect.y, 75f, rect.height);
+            if (Mouse.IsOver(inRect))
+            {
+                color = GenUI.MouseoverColor;
+            }
+            MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
+            Material material = (false ? TexUI.GrayscaleGUI : null);
+            GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
+            GUI.color = color;
+            Widgets.DefIcon(inRect, hair, color: SelPawn.story.HairColor);
+            GUI.color = Color.white;
+            if (Mouse.IsOver(inRect))
+            {
+                TipSignal tip = string.Format("{0}", hair.label.CapitalizeFirst() ?? hair.defName);
+                TooltipHandler.TipRegion(inRect, tip);
+            }
+            if (Widgets.ButtonInvisible(inRect))
+            {
+                SelPawn.story.hairDef = hair;
+                SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
+            }
+        }
+
+        public IEnumerable<HairDef> GetAllCompatibleHairStyles()
+        {
+            foreach (HairDef hair in DefDatabase<HairDef>.AllDefs)
+            {
+                if (CanUseHairStyle(hair) && !hair.HasModExtension<DefModExt_HideInAdjuster>() && !hair.texPath.NullOrEmpty())
+                {
+                    yield return hair;
+                }
+            }
+            yield break;
+        }
+
+        public bool CanUseHairStyle(HairDef hair)
+        {
+            Pawn pawn = SelPawn;
+            if (ModsConfig.BiotechActive && hair.requiredGene != null)
+            {
+                if (pawn.genes == null)
+                {
+                    return false;
+                }
+                if (!pawn.genes.HasGene(hair.requiredGene))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         #endregion
@@ -344,7 +432,89 @@ namespace PawnAdjust
 
         public void DoSelector_BeardStyle(Listing_Standard listing)
         {
+            string selectorString = "Selector_BeardStyle";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_BeardStyle".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
+            {
+                List<BeardDef> allBeardStyles = GetAllCompatibleBeardStyles().ToList();
+                allBeardStyles.SortBy(gd => gd.defName);
+                Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
+                float abCurY = 0f;
+                float abCurX = 0f;
+                for (int i = 0; i < allBeardStyles.Count(); i++)
+                {
+                    DrawBeardStyleSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allBeardStyles[i]);
+                    // Handle Row/Column Position.
+                    if ((i + 1) % 5 == 0)
+                    {
+                        abCurY += 80f;
+                        abCurX = 0f;
+                    }
+                    else
+                    {
+                        abCurX += 80f;
+                    }
+                }
+                SetSectionHeight(selectorString, abCurY + 80f);
+                listing.EndSection(headTypeListing);
+            }
+        }
 
+        public void DrawBeardStyleSelector(Rect rect, Listing_Standard listing, BeardDef beard)
+        {
+            Color color = Color.white;
+            Rect inRect = new Rect(rect.x + ((rect.width / 2f) - (75f / 2f)), rect.y, 75f, rect.height);
+            if (Mouse.IsOver(inRect))
+            {
+                color = GenUI.MouseoverColor;
+            }
+            MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
+            Material material = (false ? TexUI.GrayscaleGUI : null);
+            GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
+            GUI.color = color;
+            Widgets.DefIcon(inRect, beard, color: SelPawn.story.HairColor);
+            GUI.color = Color.white;
+            if (Mouse.IsOver(inRect))
+            {
+                TipSignal tip = string.Format("{0}", beard.label.CapitalizeFirst() ?? beard.defName);
+                TooltipHandler.TipRegion(inRect, tip);
+            }
+            if (Widgets.ButtonInvisible(inRect))
+            {
+                SelPawn.style.beardDef = beard;
+                SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
+            }
+        }
+
+        public IEnumerable<BeardDef> GetAllCompatibleBeardStyles()
+        {
+            foreach (BeardDef head in DefDatabase<BeardDef>.AllDefs)
+            {
+                if (CanUseBeardStyle(head) && !head.HasModExtension<DefModExt_HideInAdjuster>())
+                {
+                    yield return head;
+                }
+            }
+            yield break;
+        }
+
+        public bool CanUseBeardStyle(BeardDef beard)
+        {
+            Pawn pawn = SelPawn;
+            if (ModsConfig.BiotechActive && beard.requiredGene != null)
+            {
+                if (pawn.genes == null)
+                {
+                    return false;
+                }
+                if (!pawn.genes.HasGene(beard.requiredGene))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         #endregion
@@ -353,7 +523,180 @@ namespace PawnAdjust
 
         public void DoSelector_TattooStyle(Listing_Standard listing)
         {
+            string selectorString = "Selector_TattooStyle";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_TattooStyle".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
+            {
+                List<TattooDef> allTattooStyles = GetAllCompatibleTattooStyles().ToList();
+                allTattooStyles.SortBy(gd => gd.defName);
+                Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
+                float abCurY = 0f;
+                float abCurX = 0f;
+                for (int i = 0; i < allTattooStyles.Count(); i++)
+                {
+                    DrawTattooStyleSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allTattooStyles[i]);
+                    // Handle Row/Column Position.
+                    if ((i + 1) % 5 == 0)
+                    {
+                        abCurY += 80f;
+                        abCurX = 0f;
+                    }
+                    else
+                    {
+                        abCurX += 80f;
+                    }
+                }
+                SetSectionHeight(selectorString, abCurY + 80f);
+                listing.EndSection(headTypeListing);
+            }
+        }
 
+        public void DrawTattooStyleSelector(Rect rect, Listing_Standard listing, TattooDef tattoo)
+        {
+            Color color = Color.white;
+            Rect inRect = new Rect(rect.x + ((rect.width / 2f) - (75f / 2f)), rect.y, 75f, rect.height);
+            if (Mouse.IsOver(inRect))
+            {
+                color = GenUI.MouseoverColor;
+            }
+            MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
+            Material material = (false ? TexUI.GrayscaleGUI : null);
+            GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
+            GUI.color = color;
+            Widgets.DefIcon(rect, tattoo);
+            GUI.color = Color.white;
+            if (Mouse.IsOver(inRect))
+            {
+                TipSignal tip = string.Format("{0}", tattoo.label.CapitalizeFirst() ?? tattoo.defName);
+                TooltipHandler.TipRegion(inRect, tip);
+            }
+            if (Widgets.ButtonInvisible(inRect))
+            {
+                SelPawn.style.FaceTattoo = tattoo;
+                SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
+            }
+        }
+
+        public IEnumerable<TattooDef> GetAllCompatibleTattooStyles()
+        {
+            foreach (TattooDef head in DefDatabase<TattooDef>.AllDefs)
+            {
+                if (CanUseTattooStyle(head) && head.tattooType == TattooType.Face && !head.HasModExtension<DefModExt_HideInAdjuster>())
+                {
+                    yield return head;
+                }
+            }
+            yield break;
+        }
+
+        public bool CanUseTattooStyle(TattooDef tattoo)
+        {
+            Pawn pawn = SelPawn;
+            if (ModsConfig.BiotechActive && tattoo.requiredGene != null)
+            {
+                if (pawn.genes == null)
+                {
+                    return false;
+                }
+                if (!pawn.genes.HasGene(tattoo.requiredGene))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        #endregion
+
+        #region Selector: Body Tattoo Style
+
+        public void DoSelector_BodyTattooStyle(Listing_Standard listing)
+        {
+            string selectorString = "Selector_BodyTattooStyle";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_BodyTattooStyle".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
+            {
+                List<TattooDef> allTattooStyles = GetAllCompatibleBodyTattooStyles().ToList();
+                allTattooStyles.SortBy(gd => gd.defName);
+                Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
+                float abCurY = 0f;
+                float abCurX = 0f;
+                for (int i = 0; i < allTattooStyles.Count(); i++)
+                {
+                    DrawBodyTattooStyleSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allTattooStyles[i]);
+                    // Handle Row/Column Position.
+                    if ((i + 1) % 5 == 0)
+                    {
+                        abCurY += 80f;
+                        abCurX = 0f;
+                    }
+                    else
+                    {
+                        abCurX += 80f;
+                    }
+                }
+                SetSectionHeight(selectorString, abCurY + 80f);
+                listing.EndSection(headTypeListing);
+            }
+        }
+
+        public void DrawBodyTattooStyleSelector(Rect rect, Listing_Standard listing, TattooDef tattoo)
+        {
+            Color color = Color.white;
+            Rect inRect = new Rect(rect.x + ((rect.width / 2f) - (75f / 2f)), rect.y, 75f, rect.height);
+            if (Mouse.IsOver(inRect))
+            {
+                color = GenUI.MouseoverColor;
+            }
+            MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
+            Material material = (false ? TexUI.GrayscaleGUI : null);
+            GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
+            GUI.color = color;
+            Widgets.DefIcon(rect, tattoo);
+            GUI.color = Color.white;
+            if (Mouse.IsOver(inRect))
+            {
+                TipSignal tip = string.Format("{0}", tattoo.label.CapitalizeFirst() ?? tattoo.defName);
+                TooltipHandler.TipRegion(inRect, tip);
+            }
+            if (Widgets.ButtonInvisible(inRect))
+            {
+                SelPawn.style.BodyTattoo = tattoo;
+                SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
+            }
+        }
+
+        public IEnumerable<TattooDef> GetAllCompatibleBodyTattooStyles()
+        {
+            foreach (TattooDef head in DefDatabase<TattooDef>.AllDefs)
+            {
+                if (CanUseBodyTattooStyle(head) && head.tattooType == TattooType.Body && !head.HasModExtension<DefModExt_HideInAdjuster>())
+                {
+                    yield return head;
+                }
+            }
+            yield break;
+        }
+
+        public bool CanUseBodyTattooStyle(TattooDef tattoo)
+        {
+            Pawn pawn = SelPawn;
+            if (ModsConfig.BiotechActive && tattoo.requiredGene != null)
+            {
+                if (pawn.genes == null)
+                {
+                    return false;
+                }
+                if (!pawn.genes.HasGene(tattoo.requiredGene))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         #endregion
@@ -380,8 +723,7 @@ namespace PawnAdjust
 
         public void DoSelector_QuickCheats(Listing_Standard listing)
         {
-            return;
-            if (!Prefs.DevMode)
+            if (!DebugSettings.godMode)
             {
                 return;
             }
@@ -396,6 +738,7 @@ namespace PawnAdjust
 
                 DoQuickCheat_HealFully(sectionListing);
                 DoQuickCheat_MakeYoung(sectionListing);
+                DoQuickCheat_StripOff(sectionListing);
                 sectionListing.NewColumn();
                 DoQuickCheat_GivePsylink(sectionListing);
                 DoQuickCheat_GiveMechlink(sectionListing);
@@ -403,6 +746,15 @@ namespace PawnAdjust
 
                 SetSectionHeight(selectorString, sectionListing.MaxColumnHeightSeen);
                 listing.EndSection(sectionListing);
+            }
+        }
+
+        public void DoQuickCheat_StripOff(Listing_Standard listing)
+        {
+            Pawn p = SelPawn;
+            if (listing.ButtonText("Strip Naked"))
+            {
+                p.apparel.DestroyAll();
             }
         }
 
