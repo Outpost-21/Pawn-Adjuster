@@ -67,7 +67,7 @@ namespace PawnAdjust
 			}
 		}
 
-		public override bool IsVisible => base.IsVisible && CanControlPawn;
+		public override bool IsVisible => base.IsVisible && (CanControlPawn || DebugSettings.godMode);
 
         public ITab_PawnAdjust()
         {
@@ -101,9 +101,9 @@ namespace PawnAdjust
             DoSelector_BodyType(listing);
             DoSelector_HairStyle(listing);
             DoSelector_BeardStyle(listing);
-            DoSelector_HairColors(listing);
             DoSelector_TattooStyle(listing);
             DoSelector_BodyTattooStyle(listing);
+            DoSelector_HairColors(listing);
             DoSelector_ClothingColors(listing);
             DoSelector_RoyalTitle(listing);
             DoSelector_Ideoligion(listing);
