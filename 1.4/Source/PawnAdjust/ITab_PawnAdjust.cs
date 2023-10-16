@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
@@ -24,6 +22,8 @@ namespace PawnAdjust
         public Dictionary<string, Texture2D> cachedTattooTextures = new Dictionary<string, Texture2D>();
 
         public Dictionary<string, float> sectionHeights = new Dictionary<string, float>();
+
+        public List<Color> allColors;
 
         public float GetSectionHeight(string section)
         {
@@ -101,8 +101,10 @@ namespace PawnAdjust
             DoSelector_BodyType(listing);
             DoSelector_HairStyle(listing);
             DoSelector_BeardStyle(listing);
+            DoSelector_HairColors(listing);
             DoSelector_TattooStyle(listing);
             DoSelector_BodyTattooStyle(listing);
+            DoSelector_ClothingColors(listing);
             DoSelector_RoyalTitle(listing);
             DoSelector_Ideoligion(listing);
             DoSelector_QuickCheats(listing);
@@ -396,14 +398,27 @@ namespace PawnAdjust
             GUI.color = Color.white;
             if (Mouse.IsOver(inRect))
             {
-                TipSignal tip = string.Format("{0}", hair.label.CapitalizeFirst() ?? hair.defName);
-                TooltipHandler.TipRegion(inRect, tip);
+                TooltipHandler.TipRegion(inRect, GetHairTooltip(hair));
             }
             if (Widgets.ButtonInvisible(inRect))
             {
                 SelPawn.story.hairDef = hair;
                 SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
             }
+        }
+
+        public TipSignal GetHairTooltip(HairDef def)
+        {
+            TipSignal tip = string.Format("{0}", def.label.CapitalizeFirst() ?? def.defName);
+            if (!def.styleTags.NullOrEmpty())
+            {
+                tip += ("\n" + "PawnAdjust.StyleTags".Translate() + def.styleTags.ToString()).Colorize(Color.grey);
+            }
+            if (def.modContentPack != null && def.modContentPack.Name != null)
+            {
+                tip += "\n" + "PawnAdjust.ModSource".Translate() + def.modContentPack.Name.Colorize(Color.blue);
+            }
+            return tip;
         }
 
         public IEnumerable<HairDef> GetAllCompatibleHairStyles()
@@ -490,14 +505,27 @@ namespace PawnAdjust
             GUI.color = Color.white;
             if (Mouse.IsOver(inRect))
             {
-                TipSignal tip = string.Format("{0}", beard.label.CapitalizeFirst() ?? beard.defName);
-                TooltipHandler.TipRegion(inRect, tip);
+                TooltipHandler.TipRegion(inRect, GetBeardTooltip(beard));
             }
             if (Widgets.ButtonInvisible(inRect))
             {
                 SelPawn.style.beardDef = beard;
                 SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
             }
+        }
+
+        public TipSignal GetBeardTooltip(BeardDef def)
+        {
+            TipSignal tip = string.Format("{0}", def.label.CapitalizeFirst() ?? def.defName);
+            if (!def.styleTags.NullOrEmpty())
+            {
+                tip += ("\n" + "PawnAdjust.StyleTags".Translate() + def.styleTags.ToString()).Colorize(Color.grey);
+            }
+            if(def.modContentPack != null && def.modContentPack.Name != null)
+            {
+                tip += "\n" + "PawnAdjust.ModSource".Translate() + def.modContentPack.Name.Colorize(Color.blue);
+            }
+            return tip;
         }
 
         public IEnumerable<BeardDef> GetAllCompatibleBeardStyles()
@@ -527,6 +555,83 @@ namespace PawnAdjust
                 }
             }
             return true;
+        }
+
+        #endregion
+
+        #region Selector: Hair Colors
+
+        public void DoSelector_HairColors(Listing_Standard listing)
+        {
+            if(!ModLister.CheckIdeology("Styling station"))
+            {
+                return;
+            }
+            string selectorString = "Selector_HairColors";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_HairColors".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
+            {
+                Listing_Standard hairColorListing = listing.BeginSection(GetSectionHeight(selectorString));
+                float outputHeight;
+                ColorSelector(new Rect(hairColorListing.curX, hairColorListing.curY, hairColorListing.ColumnWidth, GetSectionHeight(selectorString)), SelPawn.story.HairColor, GetAllColors(), out outputHeight, 
+                    delegate(Color color) 
+                    { 
+                        SelPawn.story.HairColor = color; 
+                        SelPawn.drawer.renderer.graphics.ResolveAllGraphics(); 
+                    });
+                SetSectionHeight(selectorString, outputHeight);
+                listing.EndSection(hairColorListing);
+            }
+        }
+        public static void ColorSelector(Rect rect, Color color, List<Color> colors, out float height, Action<Color> action, Texture icon = null, int colorSize = 22, int colorPadding = 2)
+        {
+            height = 0f;
+            int num = colorSize + colorPadding * 2;
+            float num2 = ((icon != null) ? ((float)(colorSize * 4) + 10f) : 0f);
+            int num3 = Mathf.FloorToInt((rect.width - num2 + (float)colorPadding) / (float)(num + colorPadding));
+            int num4 = Mathf.CeilToInt((float)colors.Count / (float)num3);
+            Widgets.BeginGroup(rect);
+            Widgets.ColorSelectorIcon(new Rect(5f, 5f, colorSize * 4, colorSize * 4), icon, color);
+            for (int i = 0; i < colors.Count; i++)
+            {
+                int num5 = i / num3;
+                int num6 = i % num3;
+                float num7 = ((icon != null) ? ((num2 - (float)(num * num4) - (float)colorPadding) / 2f) : 0f);
+                Rect rect2 = new Rect(num2 + (float)(num6 * num) + (float)(num6 * colorPadding), num7 + (float)(num5 * num) + (float)(num5 * colorPadding), num, num);
+                if (Widgets.ColorBox(rect2, ref color, colors[i], colorSize, colorPadding))
+                {
+                    action.Invoke(color);
+                }
+                height = Mathf.Max(height, rect2.yMax);
+            }
+            Widgets.EndGroup();
+        }
+
+        public List<Color> GetAllColors()
+        {
+            if (allColors == null)
+            {
+                allColors = new List<Color>();
+                if (SelPawn.Ideo != null && !Find.IdeoManager.classicMode)
+                {
+                    allColors.Add(SelPawn.Ideo.ApparelColor);
+                }
+                if (SelPawn.story != null && !SelPawn.DevelopmentalStage.Baby() && SelPawn.story.favoriteColor.HasValue && !allColors.Any((Color c) => SelPawn.story.favoriteColor.Value.IndistinguishableFrom(c)))
+                {
+                    allColors.Add(SelPawn.story.favoriteColor.Value);
+                }
+                foreach (ColorDef colDef in DefDatabase<ColorDef>.AllDefs.Where((ColorDef x) => x.colorType == ColorType.Ideo || x.colorType == ColorType.Misc))
+                {
+                    if (!allColors.Any((Color x) => x.IndistinguishableFrom(colDef.color)))
+                    {
+                        allColors.Add(colDef.color);
+                    }
+                }
+                allColors.SortByColor((Color x) => x);
+            }
+            return allColors;
         }
 
         #endregion
@@ -584,14 +689,27 @@ namespace PawnAdjust
             GUI.color = Color.white;
             if (Mouse.IsOver(inRect))
             {
-                TipSignal tip = string.Format("{0}", tattoo.label.CapitalizeFirst() ?? tattoo.defName);
-                TooltipHandler.TipRegion(inRect, tip);
+                TooltipHandler.TipRegion(inRect, GetTattooTooltip(tattoo));
             }
             if (Widgets.ButtonInvisible(inRect))
             {
                 SelPawn.style.FaceTattoo = tattoo;
                 SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
             }
+        }
+
+        public TipSignal GetTattooTooltip(TattooDef def)
+        {
+            TipSignal tip = string.Format("{0}", def.label.CapitalizeFirst() ?? def.defName);
+            if (!def.styleTags.NullOrEmpty())
+            {
+                tip += ("\n" + "PawnAdjust.StyleTags".Translate() + def.styleTags.ToString()).Colorize(Color.grey);
+            }
+            if (def.modContentPack != null && def.modContentPack.Name != null)
+            {
+                tip += "\n" + "PawnAdjust.ModSource".Translate() + def.modContentPack.Name.Colorize(Color.blue);
+            }
+            return tip;
         }
 
         public IEnumerable<TattooDef> GetAllCompatibleTattooStyles()
@@ -678,8 +796,7 @@ namespace PawnAdjust
             GUI.color = Color.white;
             if (Mouse.IsOver(inRect))
             {
-                TipSignal tip = string.Format("{0}", tattoo.label.CapitalizeFirst() ?? tattoo.defName);
-                TooltipHandler.TipRegion(inRect, tip);
+                TooltipHandler.TipRegion(inRect, GetTattooTooltip(tattoo));
             }
             if (Widgets.ButtonInvisible(inRect))
             {
@@ -716,6 +833,71 @@ namespace PawnAdjust
             }
             return true;
         }
+
+        #endregion
+
+        #region Selector: Clothing Colors
+
+        public void DoSelector_ClothingColors(Listing_Standard listing)
+        {
+            if (!ModLister.CheckIdeology("Styling station"))
+            {
+                return;
+            }
+            string selectorString = "Selector_ApparelColors";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_ApparelColors".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
+            {
+                foreach(Apparel item in SelPawn.apparel.WornApparel)
+                {
+                    Listing_Standard apparelItemBox = listing.BeginSection(GetSectionHeight(selectorString));
+                    float outputHeight;
+                    ColorSelector(new Rect(apparelItemBox.curX, apparelItemBox.curY, apparelItemBox.ColumnWidth, GetSectionHeight(selectorString)), 
+                        item.DrawColor, 
+                        GetAllColors(), 
+                        out outputHeight, 
+                        delegate (Color color) 
+                        { 
+                            item.SetColor(color); 
+                            SelPawn.drawer.renderer.graphics.ResolveAllGraphics(); 
+                        }, item.def.uiIcon);
+                    bool flag = false;
+                    if (SelPawn.Ideo != null && !Find.IdeoManager.classicMode)
+                    {
+                        Rect ideoRect = new Rect(apparelItemBox.curX + 30f, apparelItemBox.curY + outputHeight, 150f, 24f);
+                        if (Widgets.ButtonText(ideoRect, "SetIdeoColor".Translate()))
+                        {
+                            item.SetColor(SelPawn.Ideo.ApparelColor);
+                            SelPawn.drawer.renderer.graphics.ResolveAllGraphics();
+                            SoundDefOf.Tick_Low.PlayOneShotOnCamera();
+                        }
+                        flag = true;
+                    }
+                    Pawn_StoryTracker story = SelPawn.story;
+                    if (story != null && story.favoriteColor.HasValue)
+                    {
+                        Rect storyRect = new Rect(160f + 30f, apparelItemBox.curY + outputHeight, 150f, 24f);
+                        if (Widgets.ButtonText(storyRect, "SetFavoriteColor".Translate()))
+                        {
+                            item.SetColor(story.favoriteColor.Value);
+                            SelPawn.drawer.renderer.graphics.ResolveAllGraphics();
+                            SoundDefOf.Tick_Low.PlayOneShotOnCamera();
+                        }
+                        flag = true;
+                    }
+                    if (flag)
+                    {
+                        outputHeight += 24f;
+                    }
+                    SetSectionHeight(selectorString, outputHeight);
+                    listing.EndSection(apparelItemBox);
+                    listing.Gap(8f);
+                }
+            }
+        }
+
 
         #endregion
 

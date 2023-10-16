@@ -7,9 +7,12 @@
 	<PawnAdjust.Selector_SkinColour>Skin Color</PawnAdjust.Selector_SkinColour>
 	<PawnAdjust.Selector_HairStyle>Hair Style</PawnAdjust.Selector_HairStyle>
 	<PawnAdjust.Selector_BeardStyle>Beard Style</PawnAdjust.Selector_BeardStyle>
-	<PawnAdjust.Selector_HairColour>Body Type</PawnAdjust.Selector_HairColour>
+	<PawnAdjust.Selector_HairColors>Hair Color</PawnAdjust.Selector_HairColors>
 	<PawnAdjust.Selector_TattooStyle>Face Tattoo Style</PawnAdjust.Selector_TattooStyle>
 	<PawnAdjust.Selector_BodyTattooStyle>Body Tattoo Style</PawnAdjust.Selector_BodyTattooStyle>
+	<PawnAdjust.Selector_ApparelColors>Apparel Colors</PawnAdjust.Selector_ApparelColors>
 	<PawnAdjust.Selector_QuickCheats>Quick Cheats</PawnAdjust.Selector_QuickCheats>
+	<PawnAdjust.StyleTags>Style Tags: </PawnAdjust.StyleTags>
+	<PawnAdjust.ModSource>Source: </PawnAdjust.ModSource>
 
 </LanguageData>
