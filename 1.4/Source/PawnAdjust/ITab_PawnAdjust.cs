@@ -940,9 +940,9 @@ namespace PawnAdjust
                 DoQuickCheat_MakeYoung(sectionListing);
                 DoQuickCheat_StripOff(sectionListing);
                 sectionListing.NewColumn();
+                DoQuickCheat_ResolveAllGraphics(sectionListing);
                 DoQuickCheat_GivePsylink(sectionListing);
                 DoQuickCheat_GiveMechlink(sectionListing);
-
 
                 SetSectionHeight(selectorString, sectionListing.MaxColumnHeightSeen);
                 listing.EndSection(sectionListing);
@@ -1005,6 +1005,14 @@ namespace PawnAdjust
             {
                 Hediff hediff = HediffMaker.MakeHediff(HediffDefOf.MechlinkImplant, p, p.health.hediffSet.GetBrain());
                 p.health.AddHediff(hediff);
+            }
+        }
+
+        public void DoQuickCheat_ResolveAllGraphics(Listing_Standard listing)
+        {
+            if (listing.ButtonText("Force Resolve"))
+            {
+                SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
             }
         }
 
