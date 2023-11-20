@@ -77,8 +77,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DefModExt_HideInAdjuster.cs" />
-    <Compile Include="ITab_PawnAdjust.cs" />
+    <Compile Include="ModExtensions\DefModExt_HideInAdjuster.cs" />
+    <Compile Include="Utilities\StyleItemUtil.cs" />
+    <Compile Include="UI\ITab_PawnAdjust.cs" />
+    <Compile Include="Utilities\ListUtil.cs" />
     <Compile Include="Utilities\SettingsUtil.cs" />
     <Compile Include="Utilities\LogUtil.cs" />
     <Compile Include="PatchOperations\PatchOperation_SettingActive.cs" />

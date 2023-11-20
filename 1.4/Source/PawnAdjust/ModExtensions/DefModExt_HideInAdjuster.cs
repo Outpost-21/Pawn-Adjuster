@@ -11,5 +11,6 @@ namespace PawnAdjust
 {
     public class DefModExt_HideInAdjuster : DefModExtension
     {
+        public List<ThingDef> showForRaces = new List<ThingDef>();
     }
 }

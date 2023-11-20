@@ -67,7 +67,7 @@ namespace PawnAdjust
 			}
 		}
 
-		public override bool IsVisible => base.IsVisible && (CanControlPawn || DebugSettings.godMode);
+		public override bool IsVisible => base.IsVisible && SelPawn.RaceProps.Humanlike && !SelPawn.def.HasModExtension<DefModExt_HideInAdjuster>() && (CanControlPawn || DebugSettings.godMode);
 
         public ITab_PawnAdjust()
         {
@@ -203,7 +203,8 @@ namespace PawnAdjust
         {
             foreach(HeadTypeDef head in DefDatabase<HeadTypeDef>.AllDefs)
             {
-                if (CanUseHeadType(head) && !head.HasModExtension<DefModExt_HideInAdjuster>())
+                DefModExt_HideInAdjuster ext = head.GetModExtension<DefModExt_HideInAdjuster>();
+                if (CanUseHeadType(head) && (ext == null || (!ext.showForRaces.NullOrEmpty() && ext.showForRaces.Contains(SelPawn.def))))
                 {
                     yield return head;
                 }
@@ -357,6 +358,7 @@ namespace PawnAdjust
             {
                 List<HairDef> allHairStyles = GetAllCompatibleHairStyles().ToList();
                 allHairStyles.SortBy(gd => gd.defName);
+                allHairStyles.Move(HairDefOf.Bald, 0);
                 Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
                 float abCurY = 0f;
                 float abCurX = 0f;
@@ -398,27 +400,13 @@ namespace PawnAdjust
             GUI.color = Color.white;
             if (Mouse.IsOver(inRect))
             {
-                TooltipHandler.TipRegion(inRect, GetHairTooltip(hair));
+                TooltipHandler.TipRegion(inRect, hair.GetStyleTooltip());
             }
             if (Widgets.ButtonInvisible(inRect))
             {
                 SelPawn.story.hairDef = hair;
                 SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
             }
-        }
-
-        public TipSignal GetHairTooltip(HairDef def)
-        {
-            TipSignal tip = string.Format("{0}", def.label.CapitalizeFirst() ?? def.defName);
-            if (!def.styleTags.NullOrEmpty())
-            {
-                tip += ("\n" + "PawnAdjust.StyleTags".Translate() + def.styleTags.ToString()).Colorize(Color.grey);
-            }
-            if (def.modContentPack != null && def.modContentPack.Name != null)
-            {
-                tip += "\n" + "PawnAdjust.ModSource".Translate() + def.modContentPack.Name.Colorize(Color.blue);
-            }
-            return tip;
         }
 
         public IEnumerable<HairDef> GetAllCompatibleHairStyles()
@@ -464,6 +452,7 @@ namespace PawnAdjust
             {
                 List<BeardDef> allBeardStyles = GetAllCompatibleBeardStyles().ToList();
                 allBeardStyles.SortBy(gd => gd.defName);
+                allBeardStyles.Move(BeardDefOf.NoBeard, 0);
                 Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
                 float abCurY = 0f;
                 float abCurX = 0f;
@@ -505,27 +494,13 @@ namespace PawnAdjust
             GUI.color = Color.white;
             if (Mouse.IsOver(inRect))
             {
-                TooltipHandler.TipRegion(inRect, GetBeardTooltip(beard));
+                TooltipHandler.TipRegion(inRect, beard.GetStyleTooltip());
             }
             if (Widgets.ButtonInvisible(inRect))
             {
                 SelPawn.style.beardDef = beard;
                 SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
             }
-        }
-
-        public TipSignal GetBeardTooltip(BeardDef def)
-        {
-            TipSignal tip = string.Format("{0}", def.label.CapitalizeFirst() ?? def.defName);
-            if (!def.styleTags.NullOrEmpty())
-            {
-                tip += ("\n" + "PawnAdjust.StyleTags".Translate() + def.styleTags.ToString()).Colorize(Color.grey);
-            }
-            if(def.modContentPack != null && def.modContentPack.Name != null)
-            {
-                tip += "\n" + "PawnAdjust.ModSource".Translate() + def.modContentPack.Name.Colorize(Color.blue);
-            }
-            return tip;
         }
 
         public IEnumerable<BeardDef> GetAllCompatibleBeardStyles()
@@ -648,6 +623,7 @@ namespace PawnAdjust
             {
                 List<TattooDef> allTattooStyles = GetAllCompatibleTattooStyles().ToList();
                 allTattooStyles.SortBy(gd => gd.defName);
+                allTattooStyles.Move(TattooDefOf.NoTattoo_Face, 0);
                 Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
                 float abCurY = 0f;
                 float abCurX = 0f;
@@ -689,27 +665,13 @@ namespace PawnAdjust
             GUI.color = Color.white;
             if (Mouse.IsOver(inRect))
             {
-                TooltipHandler.TipRegion(inRect, GetTattooTooltip(tattoo));
+                TooltipHandler.TipRegion(inRect, tattoo.GetStyleTooltip());
             }
             if (Widgets.ButtonInvisible(inRect))
             {
                 SelPawn.style.FaceTattoo = tattoo;
                 SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
             }
-        }
-
-        public TipSignal GetTattooTooltip(TattooDef def)
-        {
-            TipSignal tip = string.Format("{0}", def.label.CapitalizeFirst() ?? def.defName);
-            if (!def.styleTags.NullOrEmpty())
-            {
-                tip += ("\n" + "PawnAdjust.StyleTags".Translate() + def.styleTags.ToString()).Colorize(Color.grey);
-            }
-            if (def.modContentPack != null && def.modContentPack.Name != null)
-            {
-                tip += "\n" + "PawnAdjust.ModSource".Translate() + def.modContentPack.Name.Colorize(Color.blue);
-            }
-            return tip;
         }
 
         public IEnumerable<TattooDef> GetAllCompatibleTattooStyles()
@@ -755,6 +717,7 @@ namespace PawnAdjust
             {
                 List<TattooDef> allTattooStyles = GetAllCompatibleBodyTattooStyles().ToList();
                 allTattooStyles.SortBy(gd => gd.defName);
+                allTattooStyles.Move(TattooDefOf.NoTattoo_Body, 0);
                 Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
                 float abCurY = 0f;
                 float abCurX = 0f;
@@ -796,7 +759,7 @@ namespace PawnAdjust
             GUI.color = Color.white;
             if (Mouse.IsOver(inRect))
             {
-                TooltipHandler.TipRegion(inRect, GetTattooTooltip(tattoo));
+                TooltipHandler.TipRegion(inRect,tattoo.GetStyleTooltip());
             }
             if (Widgets.ButtonInvisible(inRect))
             {
@@ -941,8 +904,14 @@ namespace PawnAdjust
                 DoQuickCheat_StripOff(sectionListing);
                 sectionListing.NewColumn();
                 DoQuickCheat_ResolveAllGraphics(sectionListing);
-                DoQuickCheat_GivePsylink(sectionListing);
-                DoQuickCheat_GiveMechlink(sectionListing);
+                if (ModLister.RoyaltyInstalled)
+                {
+                    DoQuickCheat_GivePsylink(sectionListing);
+                }
+                if (ModLister.BiotechInstalled)
+                {
+                    DoQuickCheat_GiveMechlink(sectionListing);
+                }
 
                 SetSectionHeight(selectorString, sectionListing.MaxColumnHeightSeen);
                 listing.EndSection(sectionListing);
@@ -952,7 +921,7 @@ namespace PawnAdjust
         public void DoQuickCheat_StripOff(Listing_Standard listing)
         {
             Pawn p = SelPawn;
-            if (listing.ButtonText("Strip Naked"))
+            if (listing.ButtonText("Remove All Apparel"))
             {
                 p.apparel.DestroyAll();
             }
@@ -972,7 +941,7 @@ namespace PawnAdjust
             Pawn p = SelPawn;
             if (listing.ButtonText("Make Young"))
             {
-                p.ageTracker.DebugSetAge(21 * 3600000);
+                p.ageTracker.AgeBiologicalTicks = 21 * 3600000;
             }
         }
 
