@@ -83,7 +83,6 @@
     <Compile Include="Utilities\ListUtil.cs" />
     <Compile Include="Utilities\SettingsUtil.cs" />
     <Compile Include="Utilities\LogUtil.cs" />
-    <Compile Include="PatchOperations\PatchOperation_SettingActive.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PawnAdjustMod.cs" />
     <Compile Include="PawnAdjustSettings.cs" />

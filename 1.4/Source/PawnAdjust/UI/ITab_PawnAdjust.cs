@@ -101,8 +101,11 @@ namespace PawnAdjust
             DoSelector_BodyType(listing);
             DoSelector_HairStyle(listing);
             DoSelector_BeardStyle(listing);
-            DoSelector_TattooStyle(listing);
-            DoSelector_BodyTattooStyle(listing);
+            if (ModLister.IdeologyInstalled)
+            {
+                DoSelector_TattooStyle(listing);
+                DoSelector_BodyTattooStyle(listing);
+            }
             DoSelector_HairColors(listing);
             DoSelector_ClothingColors(listing);
             DoSelector_RoyalTitle(listing);
@@ -435,7 +438,7 @@ namespace PawnAdjust
                     return false;
                 }
             }
-            return true;
+            return pawn.genes?.StyleItemAllowed(hair) ?? true;
         }
 
         #endregion
@@ -529,7 +532,7 @@ namespace PawnAdjust
                     return false;
                 }
             }
-            return true;
+            return pawn.genes?.StyleItemAllowed(beard) ?? true;
         }
 
         #endregion
@@ -700,7 +703,7 @@ namespace PawnAdjust
                     return false;
                 }
             }
-            return true;
+            return pawn.genes?.StyleItemAllowed(tattoo) ?? true;
         }
 
         #endregion
@@ -794,7 +797,7 @@ namespace PawnAdjust
                     return false;
                 }
             }
-            return true;
+            return pawn.genes?.StyleItemAllowed(tattoo) ?? true;
         }
 
         #endregion
