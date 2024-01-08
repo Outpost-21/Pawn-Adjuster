@@ -28,5 +28,39 @@ namespace PawnAdjust
             }
             return tip;
         }
+
+        public static bool FitsFilter<T>(string filter, T inDef)
+        {
+            Def def = inDef as Def;
+            if (filter.NullOrEmpty())
+            {
+                return true;
+            }
+            if (!def.defName.NullOrEmpty() && def.defName.ToLower().Contains(filter))
+            {
+                return true;
+            }
+            if (!def.label.NullOrEmpty() && def.label.ToLower().Contains(filter))
+            {
+                return true;
+            }
+            if (!def.description.NullOrEmpty() && def.description.ToLower().Contains(filter))
+            {
+                return true;
+            }
+            if (def.modContentPack != null && def.modContentPack.Name.ToLower().Contains(filter))
+            {
+                return true;
+            }
+            StyleItemDef styleItemDef = def as StyleItemDef;
+            if (styleItemDef != null)
+            {
+                if (!styleItemDef.styleTags.NullOrEmpty() && styleItemDef.styleTags.Any(st => st.ToLower().Contains(filter)))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

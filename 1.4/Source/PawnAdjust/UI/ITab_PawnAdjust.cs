@@ -21,9 +21,14 @@ namespace PawnAdjust
         public Dictionary<string, Texture2D> cachedBeardTextures = new Dictionary<string, Texture2D>();
         public Dictionary<string, Texture2D> cachedTattooTextures = new Dictionary<string, Texture2D>();
 
-        public Dictionary<string, float> sectionHeights = new Dictionary<string, float>();
+        public QuickSearchWidget quickSearchHair = new QuickSearchWidget();
+        public QuickSearchWidget quickSearchBeard = new QuickSearchWidget();
+        public QuickSearchWidget quickSearchHeadTattoo = new QuickSearchWidget();
+        public QuickSearchWidget quickSearchBodyTattoo = new QuickSearchWidget();
 
         public List<Color> allColors;
+
+        public Dictionary<string, float> sectionHeights = new Dictionary<string, float>();
 
         public float GetSectionHeight(string section)
         {
@@ -37,6 +42,22 @@ namespace PawnAdjust
         public void SetSectionHeight(string section, float value)
         {
             sectionHeights[section] = value;
+        }
+
+        public Dictionary<string, float> sectionWidths = new Dictionary<string, float>();
+
+        public float GetSectionWidths(string section)
+        {
+            if (!sectionWidths.ContainsKey(section))
+            {
+                sectionWidths.Add(section, float.MaxValue);
+            }
+            return sectionWidths[section];
+        }
+
+        public void SetSectionWidths(string section, float value)
+        {
+            sectionWidths[section] = value;
         }
 
         public Dictionary<string, bool> sectionCollapsed = new Dictionary<string, bool>();
@@ -99,12 +120,19 @@ namespace PawnAdjust
             listing.GapLine();
             DoSelector_HeadType(listing);
             DoSelector_BodyType(listing);
-            DoSelector_HairStyle(listing);
-            DoSelector_BeardStyle(listing);
-            if (ModLister.IdeologyInstalled)
+            if (PawnAdjustMod.settings.legacySubsections)
             {
-                DoSelector_TattooStyle(listing);
-                DoSelector_BodyTattooStyle(listing);
+                DoSelector_HairStyle(listing);
+                DoSelector_BeardStyle(listing);
+                if (ModLister.IdeologyInstalled)
+                {
+                    DoSelector_TattooStyle(listing);
+                    DoSelector_BodyTattooStyle(listing);
+                }
+            }
+            else
+            {
+                DoSelector_StyleItems(listing);
             }
             DoSelector_HairColors(listing);
             DoSelector_ClothingColors(listing);
@@ -112,8 +140,6 @@ namespace PawnAdjust
             DoSelector_Ideoligion(listing);
             DoSelector_QuickCheats(listing);
         }
-
-        #region Selector: Head Type
 
         public void DoSelector_HeadType(Listing_Standard listing)
         {
@@ -124,55 +150,372 @@ namespace PawnAdjust
             if (!selectorOpen)
             {
                 List<HeadTypeDef> allHeadTypes = GetAllCompatibleHeadTypes().ToList();
-                allHeadTypes.SortBy(gd => gd.defName);
-                Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
-                float abCurY = 0f;
-                float abCurX = 0f;
-                for (int i = 0; i < allHeadTypes.Count(); i++)
-                {
-                    DrawHeadTypeSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allHeadTypes[i]);
-                    // Handle Row/Column Position.
-                    if (i + 1 < allHeadTypes.Count())
-                    {
-                        if ((i + 1) % 5 == 0)
-                        {
-                            abCurY += 80f;
-                            abCurX = 0f;
-                        }
-                        else
-                        {
-                            abCurX += 80f;
-                        }
-                    }
-                }
-                SetSectionHeight(selectorString, abCurY + 80f);
-                listing.EndSection(headTypeListing);
+                allHeadTypes.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
+                SelectorArray(listing, allHeadTypes, selectorString);
             }
         }
 
-        public void DrawHeadTypeSelector(Rect rect, Listing_Standard listing, HeadTypeDef head)
+        public void DoSelector_BodyType(Listing_Standard listing)
         {
-            Color color = Color.white;
-            Rect inRect = new Rect(rect.x + ((rect.width / 2f) - (75f / 2f)), rect.y, 75f, rect.height);
-            if (Mouse.IsOver(inRect))
+            if (SelPawn.ageTracker.AgeBiologicalYears < 13)
             {
-                color = GenUI.MouseoverColor;
+                return;
             }
-            MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
-            Material material = (false ? TexUI.GrayscaleGUI : null);
-            GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
-            GUI.color = color;
-            DrawHeadTypeIcon(inRect, material, head, false);
-            GUI.color = Color.white;
-            if (Mouse.IsOver(inRect))
+            string selectorString = "Selector_BodyType";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_BodyType".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
             {
-                TipSignal tip = string.Format("{0}", head.label.CapitalizeFirst() ?? head.defName);
-                TooltipHandler.TipRegion(inRect, tip);
+                List<BodyTypeDef> allBodyTypes = GetAllCompatibleBodyTypes().ToList();
+                allBodyTypes.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
+                SelectorArray(listing, allBodyTypes, selectorString);
             }
-            if (Widgets.ButtonInvisible(inRect))
+        }
+
+        public void DoSelector_StyleItems(Listing_Standard listing)
+        {
+            string selectorString = "Selector_StyleItems";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_StyleItems".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
             {
-                SelPawn.story.headType = head;
-                SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
+                if (listing.ButtonTextLabeled("PawnAdjust.Selector_HairStyle".Translate(), "PawnAdjust.ChangeButton".Translate()))
+                {
+                    if (!Find.WindowStack.IsOpen(typeof(Window_HairItemSelector)))
+                    {
+                        Find.WindowStack.Add(new Window_HairItemSelector());
+                    }
+                }
+                if (listing.ButtonTextLabeled("PawnAdjust.Selector_BeardStyle".Translate(), "PawnAdjust.ChangeButton".Translate()))
+                {
+                    if (!Find.WindowStack.IsOpen(typeof(Window_BeardItemSelector)))
+                    {
+                        Find.WindowStack.Add(new Window_BeardItemSelector());
+                    }
+                }
+                if (listing.ButtonTextLabeled("PawnAdjust.Selector_TattooStyle".Translate(), "PawnAdjust.ChangeButton".Translate()))
+                {
+                    if (!Find.WindowStack.IsOpen(typeof(Window_HeadTattooSelector)))
+                    {
+                        Find.WindowStack.Add(new Window_HeadTattooSelector());
+                    }
+                }
+                if (listing.ButtonTextLabeled("PawnAdjust.Selector_BodyTattooStyle".Translate(), "PawnAdjust.ChangeButton".Translate()))
+                {
+                    if (!Find.WindowStack.IsOpen(typeof(Window_BodyTattooSelector)))
+                    {
+                        Find.WindowStack.Add(new Window_BodyTattooSelector());
+                    }
+                }
+            }
+        }
+
+        public void DoSelector_HairStyle(Listing_Standard listing)
+        {
+            string selectorString = "Selector_HairStyle";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_HairStyle".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
+            {
+                Rect rect = listing.GetRect(30f);
+                quickSearchHair.OnGUI(rect);
+                List<HairDef> allHairStyles = GetAllCompatibleHairStyles(quickSearchHair.filter.Text).ToList();
+                allHairStyles.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
+                allHairStyles.Move(HairDefOf.Bald, 0);
+                SelectorArray(listing, allHairStyles, selectorString);
+            }
+        }
+
+        public void DoSelector_BeardStyle(Listing_Standard listing)
+        {
+            string selectorString = "Selector_BeardStyle";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_BeardStyle".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
+            {
+                Rect rect = listing.GetRect(30f);
+                quickSearchBeard.OnGUI(rect);
+                List<BeardDef> allBeardStyles = GetAllCompatibleBeardStyles(quickSearchBeard.filter.Text).ToList();
+                allBeardStyles.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
+                allBeardStyles.Move(BeardDefOf.NoBeard, 0);
+                SelectorArray(listing, allBeardStyles, selectorString);
+            }
+        }
+
+        public void DoSelector_HairColors(Listing_Standard listing)
+        {
+            if (!ModLister.CheckIdeology("Styling station"))
+            {
+                return;
+            }
+            string selectorString = "Selector_HairColors";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_HairColors".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
+            {
+                Listing_Standard hairColorListing = listing.BeginSection(GetSectionHeight(selectorString));
+                float outputHeight;
+                ColorSelector(new Rect(hairColorListing.curX, hairColorListing.curY, hairColorListing.ColumnWidth, GetSectionHeight(selectorString)), SelPawn.story.HairColor, GetAllColors(), out outputHeight,
+                    delegate (Color color)
+                    {
+                        SelPawn.story.HairColor = color;
+                        SelPawn.drawer.renderer.graphics.ResolveAllGraphics();
+                    });
+                SetSectionHeight(selectorString, outputHeight);
+                listing.EndSection(hairColorListing);
+            }
+        }
+
+        public void DoSelector_TattooStyle(Listing_Standard listing)
+        {
+            string selectorString = "Selector_TattooStyle";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_TattooStyle".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
+            {
+                Rect rect = listing.GetRect(30f);
+                quickSearchHeadTattoo.OnGUI(rect);
+                List<TattooDef> allTattooStyles = GetAllCompatibleTattooStyles(quickSearchHeadTattoo.filter.Text).ToList();
+                allTattooStyles.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
+                allTattooStyles.Move(TattooDefOf.NoTattoo_Face, 0);
+                SelectorArray(listing, allTattooStyles, selectorString);
+            }
+        }
+
+        public void DoSelector_BodyTattooStyle(Listing_Standard listing)
+        {
+            string selectorString = "Selector_BodyTattooStyle";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_BodyTattooStyle".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
+            {
+                Rect rect = listing.GetRect(30f);
+                quickSearchBodyTattoo.OnGUI(rect);
+                List<TattooDef> allTattooStyles = GetAllCompatibleBodyTattooStyles(quickSearchBodyTattoo.filter.Text).ToList();
+                allTattooStyles.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
+                allTattooStyles.Move(TattooDefOf.NoTattoo_Body, 0);
+                SelectorArray(listing, allTattooStyles, selectorString);
+            }
+        }
+
+        public void DoSelector_ClothingColors(Listing_Standard listing)
+        {
+            if (!ModLister.CheckIdeology("Styling station"))
+            {
+                return;
+            }
+            string selectorString = "Selector_ApparelColors";
+            bool selectorOpen = GetSectionOpen(selectorString);
+            listing.LabelBackedHeader("PawnAdjust.Selector_ApparelColors".Translate(), Color.white, ref selectorOpen, GameFont.Small);
+            SetSectionOpen(selectorString, selectorOpen);
+            if (!selectorOpen)
+            {
+                foreach (Apparel item in SelPawn.apparel.WornApparel)
+                {
+                    Listing_Standard apparelItemBox = listing.BeginSection(GetSectionHeight(selectorString));
+                    float outputHeight;
+                    ColorSelector(new Rect(apparelItemBox.curX, apparelItemBox.curY, apparelItemBox.ColumnWidth, GetSectionHeight(selectorString)),
+                        item.DrawColor,
+                        GetAllColors(),
+                        out outputHeight,
+                        delegate (Color color)
+                        {
+                            item.SetColor(color);
+                            SelPawn.drawer.renderer.graphics.ResolveAllGraphics();
+                        }, item.def.uiIcon);
+                    bool flag = false;
+                    if (SelPawn.Ideo != null && !Find.IdeoManager.classicMode)
+                    {
+                        Rect ideoRect = new Rect(apparelItemBox.curX + 30f, apparelItemBox.curY + outputHeight, 150f, 24f);
+                        if (Widgets.ButtonText(ideoRect, "SetIdeoColor".Translate()))
+                        {
+                            item.SetColor(SelPawn.Ideo.ApparelColor);
+                            SelPawn.drawer.renderer.graphics.ResolveAllGraphics();
+                            SoundDefOf.Tick_Low.PlayOneShotOnCamera();
+                        }
+                        flag = true;
+                    }
+                    Pawn_StoryTracker story = SelPawn.story;
+                    if (story != null && story.favoriteColor.HasValue)
+                    {
+                        Rect storyRect = new Rect(160f + 30f, apparelItemBox.curY + outputHeight, 150f, 24f);
+                        if (Widgets.ButtonText(storyRect, "SetFavoriteColor".Translate()))
+                        {
+                            item.SetColor(story.favoriteColor.Value);
+                            SelPawn.drawer.renderer.graphics.ResolveAllGraphics();
+                            SoundDefOf.Tick_Low.PlayOneShotOnCamera();
+                        }
+                        flag = true;
+                    }
+                    if (flag)
+                    {
+                        outputHeight += 24f;
+                    }
+                    SetSectionHeight(selectorString, outputHeight);
+                    listing.EndSection(apparelItemBox);
+                    listing.Gap(8f);
+                }
+            }
+        }
+
+        public void DoSelector_RoyalTitle(Listing_Standard listing)
+        {
+
+        }
+
+        public void DoSelector_Ideoligion(Listing_Standard listing)
+        {
+
+        }
+
+        public void SelectorArray<T>(Listing_Standard listing, List<T> defList, string selectorString)
+        {
+            Listing_Standard innerListing = listing.BeginSection(GetSectionHeight(selectorString));
+            float abCurY = 0f;
+            float abCurX = 0f;
+            string curSource = "";
+            int curCount = 0;
+            for (int i = 0; i < defList.Count(); i++)
+            {
+                Def def = defList[i] as Def;
+                if (def.modContentPack.Name != curSource)
+                {
+                    curSource = def.modContentPack.Name;
+                    if (abCurX != 0f)
+                    {
+                        abCurY += 80f;
+                        abCurX = 0f;
+                        curCount = 0;
+                    }
+                    Text.Font = GameFont.Tiny;
+                    GUI.color = Color.white;
+                    float textGap = Text.CalcHeight(curSource, innerListing.ColumnWidth);
+                    Rect textRect = new Rect(abCurX, abCurY, innerListing.ColumnWidth, textGap);
+                    Widgets.Label(textRect, curSource);
+                    Text.Font = GameFont.Small;
+                    abCurY += textGap;
+                    float y = abCurY + 6f;
+                    Color color = GUI.color;
+                    GUI.color = color * new Color(1f, 1f, 1f, 0.4f);
+                    Widgets.DrawLineHorizontal(0, y, innerListing.ColumnWidth - 18f);
+                    GUI.color = color;
+                    abCurY += 12f;
+                }
+                DrawSelector(new Rect(abCurX, abCurY, 80f, 75f), innerListing, def);
+                // Handle Row/Column Position.
+                curCount++;
+                if (curCount < defList.Count)
+                {
+                    if (curCount % Mathf.FloorToInt(innerListing.ColumnWidth / 80f) == 0)
+                    {
+                        abCurY += 80f;
+                        abCurX = 0f;
+                        curCount = 0;
+                    }
+                    else
+                    {
+                        abCurX += 80f;
+                    }
+                }
+            }
+            SetSectionHeight(selectorString, abCurY + 80f);
+            listing.EndSection(innerListing);
+        }
+
+        public void DrawSelector<T>(Rect rect, Listing_Standard listing, T inDef)
+        {
+            Def def = inDef as Def;
+            if (def == null) { return; }
+            StyleItemDef styleItemDef = def as StyleItemDef;
+            if (styleItemDef != null)
+            {
+                Color color = Color.white;
+                Rect inRect = new Rect(rect.x + ((rect.width / 2f) - (75f / 2f)), rect.y, 75f, rect.height);
+                if (Mouse.IsOver(inRect))
+                {
+                    color = GenUI.MouseoverColor;
+                }
+                MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
+                Material material = (false ? TexUI.GrayscaleGUI : null);
+                GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
+                if (styleItemDef is HairDef || styleItemDef is BeardDef)
+                {
+                    GUI.color = SelPawn.story.HairColor;
+                }
+                if (!styleItemDef.noGraphic)
+                {
+                    Widgets.DefIcon(inRect, styleItemDef, color: SelPawn.story.HairColor);
+                }
+                GUI.color = Color.white;
+                if (Mouse.IsOver(inRect))
+                {
+                    TooltipHandler.TipRegion(inRect, styleItemDef.GetStyleTooltip());
+                }
+                if (Widgets.ButtonInvisible(inRect))
+                {
+                    HairDef hairDef = styleItemDef as HairDef;
+                    if (hairDef != null)
+                    {
+                        SelPawn.story.hairDef = hairDef;
+                    }
+                    BeardDef beardDef = styleItemDef as BeardDef;
+                    if (beardDef != null)
+                    {
+                        SelPawn.style.beardDef = beardDef;
+                    }
+                    TattooDef tattooDef = styleItemDef as TattooDef;
+                    if (tattooDef != null)
+                    {
+                        if(tattooDef.tattooType == TattooType.Face)
+                        {
+                            SelPawn.style.faceTattoo = tattooDef;
+                        }
+                        else
+                        {
+                            SelPawn.style.bodyTattoo = tattooDef;
+                        }
+                    }
+                    SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
+                    PortraitsCache.SetDirty(SelPawn);
+                    PortraitsCache.PortraitsCacheUpdate();
+                }
+            }
+            else
+            {
+                HeadTypeDef headTypeDef = def as HeadTypeDef;
+                BodyTypeDef bodyTypeDef = def as BodyTypeDef;
+                Color color = Color.white;
+                Rect inRect = new Rect(rect.x + ((rect.width / 2f) - (75f / 2f)), rect.y, 75f, rect.height);
+                if (Mouse.IsOver(inRect))
+                {
+                    color = GenUI.MouseoverColor;
+                }
+                MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
+                Material material = (false ? TexUI.GrayscaleGUI : null);
+                GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
+                GUI.color = color;
+                if (headTypeDef != null) { DrawHeadTypeIcon(inRect, material, headTypeDef, false); }
+                if (bodyTypeDef != null) { DrawBodyTypeIcon(inRect, material, bodyTypeDef, false); }
+                GUI.color = Color.white;
+                if (Mouse.IsOver(inRect))
+                {
+                    TipSignal tip = string.Format("{0}", def.label.CapitalizeFirst() ?? def.defName);
+                    TooltipHandler.TipRegion(inRect, tip);
+                }
+                if (Widgets.ButtonInvisible(inRect))
+                {
+                    if (headTypeDef != null) { SelPawn.story.headType = headTypeDef; }
+                    if (bodyTypeDef != null) { SelPawn.story.bodyType = bodyTypeDef; }
+                    
+                    SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
+                }
             }
         }
 
@@ -193,6 +536,7 @@ namespace PawnAdjust
             rect.position += new Vector2(rect.size.x, 0f);
             GUI.color = Color.white;
         }
+
         public Texture2D GetHeadTexture(HeadTypeDef def)
         {
             if (!cachedHeadTextures.ContainsKey(def.defName))
@@ -239,75 +583,6 @@ namespace PawnAdjust
             return true;
         }
 
-        #endregion
-
-        #region Selector: Body Type
-
-        public void DoSelector_BodyType(Listing_Standard listing)
-        {
-            if(SelPawn.ageTracker.AgeBiologicalYears < 13)
-            {
-                return;
-            }
-            string selectorString = "Selector_BodyType";
-            bool selectorOpen = GetSectionOpen(selectorString);
-            listing.LabelBackedHeader("PawnAdjust.Selector_BodyType".Translate(), Color.white, ref selectorOpen, GameFont.Small);
-            SetSectionOpen(selectorString, selectorOpen);
-            if (!selectorOpen)
-            {
-                List<BodyTypeDef> allBodyTypes = GetAllCompatibleBodyTypes().ToList();
-                allBodyTypes.SortBy(gd => gd.defName);
-                Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
-                float abCurY = 0f;
-                float abCurX = 0f;
-                for (int i = 0; i < allBodyTypes.Count(); i++)
-                {
-                    DrawBodyTypeSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allBodyTypes[i]);
-                    // Handle Row/Column Position.
-                    if (i + 1 < allBodyTypes.Count())
-                    {
-                        if ((i + 1) % 5 == 0)
-                        {
-                            abCurY += 80f;
-                            abCurX = 0f;
-                        }
-                        else
-                        {
-                            abCurX += 80f;
-                        }
-                    }
-                }
-                SetSectionHeight(selectorString, abCurY + 80f);
-                listing.EndSection(headTypeListing);
-            }
-        }
-
-        public void DrawBodyTypeSelector(Rect rect, Listing_Standard listing, BodyTypeDef body)
-        {
-            Color color = Color.white;
-            Rect inRect = new Rect(rect.x + ((rect.width / 2f) - (75f / 2f)), rect.y, 75f, rect.height);
-            if (Mouse.IsOver(inRect))
-            {
-                color = GenUI.MouseoverColor;
-            }
-            MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
-            Material material = (false ? TexUI.GrayscaleGUI : null);
-            GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
-            GUI.color = color;
-            DrawBodyTypeIcon(inRect, material, body, false);
-            GUI.color = Color.white;
-            if (Mouse.IsOver(inRect))
-            {
-                TipSignal tip = string.Format("{0}", body.label.CapitalizeFirst() ?? body.defName);
-                TooltipHandler.TipRegion(inRect, tip);
-            }
-            if (Widgets.ButtonInvisible(inRect))
-            {
-                SelPawn.story.bodyType = body;
-                SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
-            }
-        }
-
         public void DrawBodyTypeIcon(Rect rect, Material buttonMat, BodyTypeDef def, bool disabled)
         {
             rect.position += new Vector2(rect.width, rect.height);
@@ -347,76 +622,11 @@ namespace PawnAdjust
             yield break;
         }
 
-        #endregion
-
-        #region Selector: Hair Style
-
-        public void DoSelector_HairStyle(Listing_Standard listing)
-        {
-            string selectorString = "Selector_HairStyle";
-            bool selectorOpen = GetSectionOpen(selectorString);
-            listing.LabelBackedHeader("PawnAdjust.Selector_HairStyle".Translate(), Color.white, ref selectorOpen, GameFont.Small);
-            SetSectionOpen(selectorString, selectorOpen);
-            if (!selectorOpen)
-            {
-                List<HairDef> allHairStyles = GetAllCompatibleHairStyles().ToList();
-                allHairStyles.SortBy(gd => gd.defName);
-                allHairStyles.Move(HairDefOf.Bald, 0);
-                Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
-                float abCurY = 0f;
-                float abCurX = 0f;
-                for (int i = 0; i < allHairStyles.Count(); i++)
-                {
-                    DrawHairStyleSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allHairStyles[i]);
-                    // Handle Row/Column Position.
-                    if (i + 1 < allHairStyles.Count())
-                    {
-                        if ((i + 1) % 5 == 0)
-                        {
-                            abCurY += 80f;
-                            abCurX = 0f;
-                        }
-                        else
-                        {
-                            abCurX += 80f;
-                        }
-                    }
-                }
-                SetSectionHeight(selectorString, abCurY + 80f);
-                listing.EndSection(headTypeListing);
-            }
-        }
-
-        public void DrawHairStyleSelector(Rect rect, Listing_Standard listing, HairDef hair)
-        {
-            Color color = Color.white;
-            Rect inRect = new Rect(rect.x + ((rect.width / 2f) - (75f / 2f)), rect.y, 75f, rect.height);
-            if (Mouse.IsOver(inRect))
-            {
-                color = GenUI.MouseoverColor;
-            }
-            MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
-            Material material = (false ? TexUI.GrayscaleGUI : null);
-            GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
-            GUI.color = SelPawn.story.HairColor;
-            Widgets.DefIcon(inRect, hair, color: SelPawn.story.HairColor);
-            GUI.color = Color.white;
-            if (Mouse.IsOver(inRect))
-            {
-                TooltipHandler.TipRegion(inRect, hair.GetStyleTooltip());
-            }
-            if (Widgets.ButtonInvisible(inRect))
-            {
-                SelPawn.story.hairDef = hair;
-                SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
-            }
-        }
-
-        public IEnumerable<HairDef> GetAllCompatibleHairStyles()
+        public IEnumerable<HairDef> GetAllCompatibleHairStyles(string filter)
         {
             foreach (HairDef hair in DefDatabase<HairDef>.AllDefs)
             {
-                if (CanUseHairStyle(hair) && !hair.HasModExtension<DefModExt_HideInAdjuster>() && !hair.texPath.NullOrEmpty())
+                if (CanUseHairStyle(hair) && !hair.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, hair))
                 {
                     yield return hair;
                 }
@@ -441,78 +651,13 @@ namespace PawnAdjust
             return pawn.genes?.StyleItemAllowed(hair) ?? true;
         }
 
-        #endregion
-
-        #region Selector: Beard Style
-
-        public void DoSelector_BeardStyle(Listing_Standard listing)
+        public IEnumerable<BeardDef> GetAllCompatibleBeardStyles(string filter)
         {
-            string selectorString = "Selector_BeardStyle";
-            bool selectorOpen = GetSectionOpen(selectorString);
-            listing.LabelBackedHeader("PawnAdjust.Selector_BeardStyle".Translate(), Color.white, ref selectorOpen, GameFont.Small);
-            SetSectionOpen(selectorString, selectorOpen);
-            if (!selectorOpen)
+            foreach (BeardDef beard in DefDatabase<BeardDef>.AllDefs)
             {
-                List<BeardDef> allBeardStyles = GetAllCompatibleBeardStyles().ToList();
-                allBeardStyles.SortBy(gd => gd.defName);
-                allBeardStyles.Move(BeardDefOf.NoBeard, 0);
-                Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
-                float abCurY = 0f;
-                float abCurX = 0f;
-                for (int i = 0; i < allBeardStyles.Count(); i++)
+                if (CanUseBeardStyle(beard) && !beard.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, beard))
                 {
-                    DrawBeardStyleSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allBeardStyles[i]);
-                    // Handle Row/Column Position.
-                    if (i + 1 < allBeardStyles.Count())
-                    {
-                        if ((i + 1) % 5 == 0)
-                        {
-                            abCurY += 80f;
-                            abCurX = 0f;
-                        }
-                        else
-                        {
-                            abCurX += 80f;
-                        }
-                    }
-                }
-                SetSectionHeight(selectorString, abCurY + 80f);
-                listing.EndSection(headTypeListing);
-            }
-        }
-
-        public void DrawBeardStyleSelector(Rect rect, Listing_Standard listing, BeardDef beard)
-        {
-            Color color = Color.white;
-            Rect inRect = new Rect(rect.x + ((rect.width / 2f) - (75f / 2f)), rect.y, 75f, rect.height);
-            if (Mouse.IsOver(inRect))
-            {
-                color = GenUI.MouseoverColor;
-            }
-            MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
-            Material material = (false ? TexUI.GrayscaleGUI : null);
-            GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
-            GUI.color = SelPawn.story.HairColor;
-            Widgets.DefIcon(inRect, beard, color: SelPawn.story.HairColor);
-            GUI.color = Color.white;
-            if (Mouse.IsOver(inRect))
-            {
-                TooltipHandler.TipRegion(inRect, beard.GetStyleTooltip());
-            }
-            if (Widgets.ButtonInvisible(inRect))
-            {
-                SelPawn.style.beardDef = beard;
-                SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
-            }
-        }
-
-        public IEnumerable<BeardDef> GetAllCompatibleBeardStyles()
-        {
-            foreach (BeardDef head in DefDatabase<BeardDef>.AllDefs)
-            {
-                if (CanUseBeardStyle(head) && !head.HasModExtension<DefModExt_HideInAdjuster>())
-                {
-                    yield return head;
+                    yield return beard;
                 }
             }
             yield break;
@@ -535,34 +680,6 @@ namespace PawnAdjust
             return pawn.genes?.StyleItemAllowed(beard) ?? true;
         }
 
-        #endregion
-
-        #region Selector: Hair Colors
-
-        public void DoSelector_HairColors(Listing_Standard listing)
-        {
-            if(!ModLister.CheckIdeology("Styling station"))
-            {
-                return;
-            }
-            string selectorString = "Selector_HairColors";
-            bool selectorOpen = GetSectionOpen(selectorString);
-            listing.LabelBackedHeader("PawnAdjust.Selector_HairColors".Translate(), Color.white, ref selectorOpen, GameFont.Small);
-            SetSectionOpen(selectorString, selectorOpen);
-            if (!selectorOpen)
-            {
-                Listing_Standard hairColorListing = listing.BeginSection(GetSectionHeight(selectorString));
-                float outputHeight;
-                ColorSelector(new Rect(hairColorListing.curX, hairColorListing.curY, hairColorListing.ColumnWidth, GetSectionHeight(selectorString)), SelPawn.story.HairColor, GetAllColors(), out outputHeight, 
-                    delegate(Color color) 
-                    { 
-                        SelPawn.story.HairColor = color; 
-                        SelPawn.drawer.renderer.graphics.ResolveAllGraphics(); 
-                    });
-                SetSectionHeight(selectorString, outputHeight);
-                listing.EndSection(hairColorListing);
-            }
-        }
         public static void ColorSelector(Rect rect, Color color, List<Color> colors, out float height, Action<Color> action, Texture icon = null, int colorSize = 22, int colorPadding = 2)
         {
             height = 0f;
@@ -612,78 +729,13 @@ namespace PawnAdjust
             return allColors;
         }
 
-        #endregion
-
-        #region Selector: Tattoo Style
-
-        public void DoSelector_TattooStyle(Listing_Standard listing)
+        public IEnumerable<TattooDef> GetAllCompatibleTattooStyles(string filter)
         {
-            string selectorString = "Selector_TattooStyle";
-            bool selectorOpen = GetSectionOpen(selectorString);
-            listing.LabelBackedHeader("PawnAdjust.Selector_TattooStyle".Translate(), Color.white, ref selectorOpen, GameFont.Small);
-            SetSectionOpen(selectorString, selectorOpen);
-            if (!selectorOpen)
+            foreach (TattooDef headTat in DefDatabase<TattooDef>.AllDefs)
             {
-                List<TattooDef> allTattooStyles = GetAllCompatibleTattooStyles().ToList();
-                allTattooStyles.SortBy(gd => gd.defName);
-                allTattooStyles.Move(TattooDefOf.NoTattoo_Face, 0);
-                Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
-                float abCurY = 0f;
-                float abCurX = 0f;
-                for (int i = 0; i < allTattooStyles.Count(); i++)
+                if (CanUseTattooStyle(headTat) && headTat.tattooType == TattooType.Face && !headTat.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, headTat))
                 {
-                    DrawTattooStyleSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allTattooStyles[i]);
-                    // Handle Row/Column Position.
-                    if (i + 1 < allTattooStyles.Count())
-                    {
-                        if ((i + 1) % 5 == 0)
-                        {
-                            abCurY += 80f;
-                            abCurX = 0f;
-                        }
-                        else
-                        {
-                            abCurX += 80f;
-                        }
-                    }
-                }
-                SetSectionHeight(selectorString, abCurY + 80f);
-                listing.EndSection(headTypeListing);
-            }
-        }
-
-        public void DrawTattooStyleSelector(Rect rect, Listing_Standard listing, TattooDef tattoo)
-        {
-            Color color = Color.white;
-            Rect inRect = new Rect(rect.x + ((rect.width / 2f) - (75f / 2f)), rect.y, 75f, rect.height);
-            if (Mouse.IsOver(inRect))
-            {
-                color = GenUI.MouseoverColor;
-            }
-            MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
-            Material material = (false ? TexUI.GrayscaleGUI : null);
-            GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
-            GUI.color = color;
-            Widgets.DefIcon(rect, tattoo);
-            GUI.color = Color.white;
-            if (Mouse.IsOver(inRect))
-            {
-                TooltipHandler.TipRegion(inRect, tattoo.GetStyleTooltip());
-            }
-            if (Widgets.ButtonInvisible(inRect))
-            {
-                SelPawn.style.FaceTattoo = tattoo;
-                SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
-            }
-        }
-
-        public IEnumerable<TattooDef> GetAllCompatibleTattooStyles()
-        {
-            foreach (TattooDef head in DefDatabase<TattooDef>.AllDefs)
-            {
-                if (CanUseTattooStyle(head) && head.tattooType == TattooType.Face && !head.HasModExtension<DefModExt_HideInAdjuster>())
-                {
-                    yield return head;
+                    yield return headTat;
                 }
             }
             yield break;
@@ -706,78 +758,13 @@ namespace PawnAdjust
             return pawn.genes?.StyleItemAllowed(tattoo) ?? true;
         }
 
-        #endregion
-
-        #region Selector: Body Tattoo Style
-
-        public void DoSelector_BodyTattooStyle(Listing_Standard listing)
+        public IEnumerable<TattooDef> GetAllCompatibleBodyTattooStyles(string filter)
         {
-            string selectorString = "Selector_BodyTattooStyle";
-            bool selectorOpen = GetSectionOpen(selectorString);
-            listing.LabelBackedHeader("PawnAdjust.Selector_BodyTattooStyle".Translate(), Color.white, ref selectorOpen, GameFont.Small);
-            SetSectionOpen(selectorString, selectorOpen);
-            if (!selectorOpen)
+            foreach (TattooDef bodyTat in DefDatabase<TattooDef>.AllDefs)
             {
-                List<TattooDef> allTattooStyles = GetAllCompatibleBodyTattooStyles().ToList();
-                allTattooStyles.SortBy(gd => gd.defName);
-                allTattooStyles.Move(TattooDefOf.NoTattoo_Body, 0);
-                Listing_Standard headTypeListing = listing.BeginSection(GetSectionHeight(selectorString));
-                float abCurY = 0f;
-                float abCurX = 0f;
-                for (int i = 0; i < allTattooStyles.Count(); i++)
+                if (CanUseBodyTattooStyle(bodyTat) && bodyTat.tattooType == TattooType.Body && !bodyTat.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, bodyTat))
                 {
-                    DrawBodyTattooStyleSelector(new Rect(abCurX, abCurY, 80f, 75f), headTypeListing, allTattooStyles[i]);
-                    // Handle Row/Column Position.
-                    if (i + 1 < allTattooStyles.Count())
-                    {
-                        if ((i + 1) % 5 == 0)
-                        {
-                            abCurY += 80f;
-                            abCurX = 0f;
-                        }
-                        else
-                        {
-                            abCurX += 80f;
-                        }
-                    }
-                }
-                SetSectionHeight(selectorString, abCurY + 80f);
-                listing.EndSection(headTypeListing);
-            }
-        }
-
-        public void DrawBodyTattooStyleSelector(Rect rect, Listing_Standard listing, TattooDef tattoo)
-        {
-            Color color = Color.white;
-            Rect inRect = new Rect(rect.x + ((rect.width / 2f) - (75f / 2f)), rect.y, 75f, rect.height);
-            if (Mouse.IsOver(inRect))
-            {
-                color = GenUI.MouseoverColor;
-            }
-            MouseoverSounds.DoRegion(inRect, SoundDefOf.Mouseover_Command);
-            Material material = (false ? TexUI.GrayscaleGUI : null);
-            GenUI.DrawTextureWithMaterial(inRect, Command.BGTex, material);
-            GUI.color = color;
-            Widgets.DefIcon(rect, tattoo);
-            GUI.color = Color.white;
-            if (Mouse.IsOver(inRect))
-            {
-                TooltipHandler.TipRegion(inRect,tattoo.GetStyleTooltip());
-            }
-            if (Widgets.ButtonInvisible(inRect))
-            {
-                SelPawn.style.BodyTattoo = tattoo;
-                SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
-            }
-        }
-
-        public IEnumerable<TattooDef> GetAllCompatibleBodyTattooStyles()
-        {
-            foreach (TattooDef head in DefDatabase<TattooDef>.AllDefs)
-            {
-                if (CanUseBodyTattooStyle(head) && head.tattooType == TattooType.Body && !head.HasModExtension<DefModExt_HideInAdjuster>())
-                {
-                    yield return head;
+                    yield return bodyTat;
                 }
             }
             yield break;
@@ -799,91 +786,6 @@ namespace PawnAdjust
             }
             return pawn.genes?.StyleItemAllowed(tattoo) ?? true;
         }
-
-        #endregion
-
-        #region Selector: Clothing Colors
-
-        public void DoSelector_ClothingColors(Listing_Standard listing)
-        {
-            if (!ModLister.CheckIdeology("Styling station"))
-            {
-                return;
-            }
-            string selectorString = "Selector_ApparelColors";
-            bool selectorOpen = GetSectionOpen(selectorString);
-            listing.LabelBackedHeader("PawnAdjust.Selector_ApparelColors".Translate(), Color.white, ref selectorOpen, GameFont.Small);
-            SetSectionOpen(selectorString, selectorOpen);
-            if (!selectorOpen)
-            {
-                foreach(Apparel item in SelPawn.apparel.WornApparel)
-                {
-                    Listing_Standard apparelItemBox = listing.BeginSection(GetSectionHeight(selectorString));
-                    float outputHeight;
-                    ColorSelector(new Rect(apparelItemBox.curX, apparelItemBox.curY, apparelItemBox.ColumnWidth, GetSectionHeight(selectorString)), 
-                        item.DrawColor, 
-                        GetAllColors(), 
-                        out outputHeight, 
-                        delegate (Color color) 
-                        { 
-                            item.SetColor(color); 
-                            SelPawn.drawer.renderer.graphics.ResolveAllGraphics(); 
-                        }, item.def.uiIcon);
-                    bool flag = false;
-                    if (SelPawn.Ideo != null && !Find.IdeoManager.classicMode)
-                    {
-                        Rect ideoRect = new Rect(apparelItemBox.curX + 30f, apparelItemBox.curY + outputHeight, 150f, 24f);
-                        if (Widgets.ButtonText(ideoRect, "SetIdeoColor".Translate()))
-                        {
-                            item.SetColor(SelPawn.Ideo.ApparelColor);
-                            SelPawn.drawer.renderer.graphics.ResolveAllGraphics();
-                            SoundDefOf.Tick_Low.PlayOneShotOnCamera();
-                        }
-                        flag = true;
-                    }
-                    Pawn_StoryTracker story = SelPawn.story;
-                    if (story != null && story.favoriteColor.HasValue)
-                    {
-                        Rect storyRect = new Rect(160f + 30f, apparelItemBox.curY + outputHeight, 150f, 24f);
-                        if (Widgets.ButtonText(storyRect, "SetFavoriteColor".Translate()))
-                        {
-                            item.SetColor(story.favoriteColor.Value);
-                            SelPawn.drawer.renderer.graphics.ResolveAllGraphics();
-                            SoundDefOf.Tick_Low.PlayOneShotOnCamera();
-                        }
-                        flag = true;
-                    }
-                    if (flag)
-                    {
-                        outputHeight += 24f;
-                    }
-                    SetSectionHeight(selectorString, outputHeight);
-                    listing.EndSection(apparelItemBox);
-                    listing.Gap(8f);
-                }
-            }
-        }
-
-
-        #endregion
-
-        #region Selector: Royal Title
-
-        public void DoSelector_RoyalTitle(Listing_Standard listing)
-        {
-
-        }
-
-        #endregion
-
-        #region Selector: Ideoligion
-
-        public void DoSelector_Ideoligion(Listing_Standard listing)
-        {
-
-        }
-
-        #endregion
 
         #region Selector: Quick Cheats
 

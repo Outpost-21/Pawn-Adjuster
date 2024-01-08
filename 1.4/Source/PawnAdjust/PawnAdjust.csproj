@@ -78,6 +78,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ModExtensions\DefModExt_HideInAdjuster.cs" />
+    <Compile Include="UI\Window_BodyTattooSelector.cs" />
+    <Compile Include="UI\Window_HeadTattooSelector.cs" />
+    <Compile Include="UI\Window_BeardItemSelector.cs" />
+    <Compile Include="UI\Window_HairItemSelector.cs" />
     <Compile Include="Utilities\StyleItemUtil.cs" />
     <Compile Include="UI\ITab_PawnAdjust.cs" />
     <Compile Include="Utilities\ListUtil.cs" />
@@ -86,6 +90,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PawnAdjustMod.cs" />
     <Compile Include="PawnAdjustSettings.cs" />
+    <Compile Include="UI\Window_StyleItemSelector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

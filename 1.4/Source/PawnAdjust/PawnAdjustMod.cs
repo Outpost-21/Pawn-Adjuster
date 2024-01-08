@@ -42,28 +42,40 @@ namespace PawnAdjust
             harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
 
-        //public override string SettingsCategory() => "Pawn Adjust";
+        public override string SettingsCategory() => "Pawn Adjuster";
 
-        //public override void DoSettingsWindowContents(Rect inRect)
-        //{
-        //    base.DoSettingsWindowContents(inRect);
-        //    bool flag = optionsViewRectHeight > inRect.height;
-        //    Rect viewRect = new Rect(inRect.x, inRect.y, inRect.width - (flag ? 26f : 0f), optionsViewRectHeight);
-        //    Widgets.BeginScrollView(inRect, ref optionsScrollPosition, viewRect);
-        //    Listing_Standard listing = new Listing_Standard();
-        //    Rect rect = new Rect(viewRect.x, viewRect.y, viewRect.width, 999999f);
-        //    listing.Begin(rect);
-        //    // ============================ CONTENTS ================================
-        //    DoOptionsCategoryContents(listing);
-        //    // ======================================================================
-        //    optionsViewRectHeight = listing.CurHeight;
-        //    listing.End();
-        //    Widgets.EndScrollView();
-        //}
+        public override void DoSettingsWindowContents(Rect inRect)
+        {
+            base.DoSettingsWindowContents(inRect);
+            bool flag = optionsViewRectHeight > inRect.height;
+            Rect viewRect = new Rect(inRect.x, inRect.y, inRect.width - (flag ? 26f : 0f), optionsViewRectHeight);
+            Widgets.BeginScrollView(inRect, ref optionsScrollPosition, viewRect);
+            Listing_Standard listing = new Listing_Standard();
+            Rect rect = new Rect(viewRect.x, viewRect.y, viewRect.width, 999999f);
+            listing.Begin(rect);
+            // ============================ CONTENTS ================================
+            DoOptionsCategoryContents(listing);
+            // ======================================================================
+            optionsViewRectHeight = listing.CurHeight;
+            listing.End();
+            Widgets.EndScrollView();
+        }
 
-        //public void DoOptionsCategoryContents(Listing_Standard listing)
-        //{
+        public void DoOptionsCategoryContents(Listing_Standard listing)
+        {
+            listing.CheckboxEnhanced("PawnAdjust.Setting_LegacySubsections".Translate(), "PawnAdjust.Setting_LegacySubsectionsDesc".Translate(), ref settings.legacySubsections);
+            if (listing.ButtonTextLabeled("PawnAdjust.Setting_ResetStyleWindows".Translate(), "PawnAdjust.Setting_ResetButton".Translate(), tooltip: "PawnAdjust.Setting_ResetStyleWindowsDesc".Translate()))
+            {
+                settings.hairSelectorSize = new Vector2(900f, 700f);
+                settings.beardSelectorSize = new Vector2(900f, 700f);
+                settings.headTattooSelectorSize = new Vector2(900f, 700f);
+                settings.bodyTattooSelectorSize = new Vector2(900f, 700f);
 
-        //}
+                settings.hairSelectorPos = new Vector2(((float)UI.screenWidth - 900f) / 2f, ((float)UI.screenHeight - 700f) / 2f);
+                settings.beardSelectorPos = new Vector2(((float)UI.screenWidth - 900f) / 2f, ((float)UI.screenHeight - 700f) / 2f);
+                settings.headTattooSelectorPos = new Vector2(((float)UI.screenWidth - 900f) / 2f, ((float)UI.screenHeight - 700f) / 2f);
+                settings.bodyTattooSelectorPos = new Vector2(((float)UI.screenWidth - 900f) / 2f, ((float)UI.screenHeight - 700f) / 2f);
+            }
+        }
     }
 }

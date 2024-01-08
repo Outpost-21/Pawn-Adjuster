@@ -2,9 +2,11 @@
 <LanguageData>
 
 	<PawnAdjust.PawnAdjust>Adjust</PawnAdjust.PawnAdjust>
+	<PawnAdjust.ChangeButton>Change...</PawnAdjust.ChangeButton>
 	<PawnAdjust.Selector_HeadType>Head Type</PawnAdjust.Selector_HeadType>
 	<PawnAdjust.Selector_BodyType>Body Type</PawnAdjust.Selector_BodyType>
 	<PawnAdjust.Selector_SkinColour>Skin Color</PawnAdjust.Selector_SkinColour>
+	<PawnAdjust.Selector_StyleItems>Style Selectors</PawnAdjust.Selector_StyleItems>
 	<PawnAdjust.Selector_HairStyle>Hair Style</PawnAdjust.Selector_HairStyle>
 	<PawnAdjust.Selector_BeardStyle>Beard Style</PawnAdjust.Selector_BeardStyle>
 	<PawnAdjust.Selector_HairColors>Hair Color</PawnAdjust.Selector_HairColors>
@@ -14,5 +16,11 @@
 	<PawnAdjust.Selector_QuickCheats>Quick Cheats</PawnAdjust.Selector_QuickCheats>
 	<PawnAdjust.StyleTags>Style Tags: </PawnAdjust.StyleTags>
 	<PawnAdjust.ModSource>Source: </PawnAdjust.ModSource>
+
+	<PawnAdjust.Setting_LegacySubsections>Legacy Subsections</PawnAdjust.Setting_LegacySubsections>
+	<PawnAdjust.Setting_LegacySubsectionsDesc>If enabled, returns the Style (Hair / Beard / Tattoo) subsections to how they used to be, inside the ITab itself instead of opening a new window for each.</PawnAdjust.Setting_LegacySubsectionsDesc>
+	<PawnAdjust.Setting_ResetStyleWindows>Reset Style Windows</PawnAdjust.Setting_ResetStyleWindows>
+	<PawnAdjust.Setting_ResetButton>Reset</PawnAdjust.Setting_ResetButton>
+	<PawnAdjust.Setting_ResetStyleWindowsDesc>Resets the position and size of the style changing windows, in the off chance you manage to get them in an undraggable position or size.</PawnAdjust.Setting_ResetStyleWindowsDesc>
 
 </LanguageData>
