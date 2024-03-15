@@ -264,7 +264,7 @@ namespace PawnAdjust
                     delegate (Color color)
                     {
                         SelPawn.story.HairColor = color;
-                        SelPawn.drawer.renderer.graphics.ResolveAllGraphics();
+                        SelPawn.drawer.renderer.SetAllGraphicsDirty();
                     });
                 SetSectionHeight(selectorString, outputHeight);
                 listing.EndSection(hairColorListing);
@@ -328,7 +328,7 @@ namespace PawnAdjust
                         delegate (Color color)
                         {
                             item.SetColor(color);
-                            SelPawn.drawer.renderer.graphics.ResolveAllGraphics();
+                            SelPawn.drawer.renderer.SetAllGraphicsDirty();
                         }, item.def.uiIcon);
                     bool flag = false;
                     if (SelPawn.Ideo != null && !Find.IdeoManager.classicMode)
@@ -337,7 +337,7 @@ namespace PawnAdjust
                         if (Widgets.ButtonText(ideoRect, "SetIdeoColor".Translate()))
                         {
                             item.SetColor(SelPawn.Ideo.ApparelColor);
-                            SelPawn.drawer.renderer.graphics.ResolveAllGraphics();
+                            SelPawn.drawer.renderer.SetAllGraphicsDirty();
                             SoundDefOf.Tick_Low.PlayOneShotOnCamera();
                         }
                         flag = true;
@@ -349,7 +349,7 @@ namespace PawnAdjust
                         if (Widgets.ButtonText(storyRect, "SetFavoriteColor".Translate()))
                         {
                             item.SetColor(story.favoriteColor.Value);
-                            SelPawn.drawer.renderer.graphics.ResolveAllGraphics();
+                            SelPawn.drawer.renderer.SetAllGraphicsDirty();
                             SoundDefOf.Tick_Low.PlayOneShotOnCamera();
                         }
                         flag = true;
@@ -482,7 +482,7 @@ namespace PawnAdjust
                             SelPawn.style.bodyTattoo = tattooDef;
                         }
                     }
-                    SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
+                    SelPawn.Drawer.renderer.SetAllGraphicsDirty();
                     PortraitsCache.SetDirty(SelPawn);
                     PortraitsCache.PortraitsCacheUpdate();
                 }
@@ -514,7 +514,7 @@ namespace PawnAdjust
                     if (headTypeDef != null) { SelPawn.story.headType = headTypeDef; }
                     if (bodyTypeDef != null) { SelPawn.story.bodyType = bodyTypeDef; }
                     
-                    SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
+                    SelPawn.Drawer.renderer.SetAllGraphicsDirty();
                 }
             }
         }
@@ -541,7 +541,7 @@ namespace PawnAdjust
         {
             if (!cachedHeadTextures.ContainsKey(def.defName))
             {
-                cachedHeadTextures.Add(def.defName, (Texture2D)def.GetGraphic(SelPawn.story.SkinColor).MatSouth.mainTexture ?? BaseContent.BadTex);
+                cachedHeadTextures.Add(def.defName, (Texture2D)def.GetGraphic(SelPawn, SelPawn.story.SkinColor).MatSouth.mainTexture ?? BaseContent.BadTex);
             }
             return cachedHeadTextures[def.defName];
         }
@@ -886,7 +886,7 @@ namespace PawnAdjust
         {
             if (listing.ButtonText("Force Resolve"))
             {
-                SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
+                SelPawn.Drawer.renderer.SetAllGraphicsDirty();
             }
         }
 

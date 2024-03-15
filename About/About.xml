@@ -6,6 +6,7 @@
 	<url>https://www.patreon.com/neronix17</url>
 	<supportedVersions>
 		<li>1.4</li>
+		<li>1.5</li>
 	</supportedVersions>
 	<description>Super lightweight inspector tab for handling pawn head type, body type, hair, beard and tattoos.</description>
 </ModMetaData>

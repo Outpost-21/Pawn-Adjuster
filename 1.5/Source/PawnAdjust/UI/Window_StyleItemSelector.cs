@@ -173,7 +173,7 @@ namespace PawnAdjust
                             SelPawn.style.bodyTattoo = tattooDef;
                         }
                     }
-                    SelPawn.Drawer.renderer.graphics.ResolveAllGraphics();
+                    SelPawn.Drawer.renderer.SetAllGraphicsDirty();
                     PortraitsCache.SetDirty(SelPawn);
                     PortraitsCache.PortraitsCacheUpdate();
                 }

@@ -40,23 +40,5 @@ namespace PawnAdjust
             Scribe_Values.Look(ref headTattooSelectorPos, "headTattooSelectorPos");
             Scribe_Values.Look(ref bodyTattooSelectorPos, "bodyTattooSelectorPos");
         }
-
-        public bool IsValidSetting(string input)
-        {
-            if (GetType().GetFields().Where(p => p.FieldType == typeof(bool)).Any(i => i.Name == input))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public IEnumerable<string> GetEnabledSettings
-        {
-            get
-            {
-                return GetType().GetFields().Where(p => p.FieldType == typeof(bool) && (bool)p.GetValue(this)).Select(p => p.Name);
-            }
-        }
     }
 }
