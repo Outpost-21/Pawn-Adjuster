@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Patch>
+
+	<Operation Class="PatchOperationAdd">
+		<xpath>/Defs/ThingDef[@Name="BasePawn"]/inspectorTabs</xpath>
+		<value>
+			<li>PawnAdjust.ITab_PawnAdjust</li>
+		</value>
+	</Operation>
+
+	<Operation Class="PatchOperationAddModExtension">
+		<xpath>/Defs/HeadTypeDef[defName="Skull" or defName="Stump"]</xpath>
+		<value>
+			<li Class="PawnAdjust.DefModExt_HideInAdjuster" />
+		</value>
+	</Operation>
+
+</Patch>
