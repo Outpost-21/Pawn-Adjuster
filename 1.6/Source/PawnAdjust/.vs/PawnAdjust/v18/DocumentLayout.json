@@ -1,0 +1,219 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\ui\\window_bodytattooselector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|solutionrelative:ui\\window_bodytattooselector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\ui\\window_bearditemselector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|solutionrelative:ui\\window_bearditemselector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\ui\\window_hairitemselector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|solutionrelative:ui\\window_hairitemselector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\ui\\window_headtattooselector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|solutionrelative:ui\\window_headtattooselector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\ui\\itab_pawnadjust.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|solutionrelative:ui\\itab_pawnadjust.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\ui\\window_styleitemselector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|solutionrelative:ui\\window_styleitemselector.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\pawnadjustsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|solutionrelative:pawnadjustsettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\utilities\\styleitemutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|solutionrelative:utilities\\styleitemutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|g:\\rwmodcategories\\neronix17\\_ui\\pawnadjust\\1.6\\source\\pawnadjust\\pawnadjustmod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|solutionrelative:pawnadjustmod.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\utilities\\settingsutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|solutionrelative:utilities\\settingsutil.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|PawnAdjust||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{399CDABE-B4F1-4B6C-BEDA-150993C8B62E}|PawnAdjust.csproj|solutionrelative:properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 231,
+          "SelectedChildIndex": 4,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Window_HairItemSelector.cs",
+              "DocumentMoniker": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\UI\\Window_HairItemSelector.cs",
+              "RelativeDocumentMoniker": "UI\\Window_HairItemSelector.cs",
+              "ToolTip": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\UI\\Window_HairItemSelector.cs",
+              "RelativeToolTip": "UI\\Window_HairItemSelector.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAAawD8AAABeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-09T13:52:44.368Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PawnAdjustSettings.cs",
+              "DocumentMoniker": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\PawnAdjustSettings.cs",
+              "RelativeDocumentMoniker": "PawnAdjustSettings.cs",
+              "ToolTip": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\PawnAdjustSettings.cs",
+              "RelativeToolTip": "PawnAdjustSettings.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABAAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-09T13:52:44.42Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Window_BeardItemSelector.cs",
+              "DocumentMoniker": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\UI\\Window_BeardItemSelector.cs",
+              "RelativeDocumentMoniker": "UI\\Window_BeardItemSelector.cs",
+              "ToolTip": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\UI\\Window_BeardItemSelector.cs",
+              "RelativeToolTip": "UI\\Window_BeardItemSelector.cs",
+              "ViewState": "AgIAADMAAAAAAAAAAAAlwD8AAABhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-09T13:52:44.326Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ITab_PawnAdjust.cs",
+              "DocumentMoniker": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\UI\\ITab_PawnAdjust.cs",
+              "RelativeDocumentMoniker": "UI\\ITab_PawnAdjust.cs",
+              "ToolTip": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\UI\\ITab_PawnAdjust.cs",
+              "RelativeToolTip": "UI\\ITab_PawnAdjust.cs",
+              "ViewState": "AgIAAJYAAAAAAAAAAAArwOAAAABSAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-09T13:52:44.325Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Window_BodyTattooSelector.cs",
+              "DocumentMoniker": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\UI\\Window_BodyTattooSelector.cs",
+              "RelativeDocumentMoniker": "UI\\Window_BodyTattooSelector.cs",
+              "ToolTip": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\UI\\Window_BodyTattooSelector.cs",
+              "RelativeToolTip": "UI\\Window_BodyTattooSelector.cs",
+              "ViewState": "AgIAADYAAAAAAAAAAAAlwD8AAABoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-09T13:52:44.304Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Window_HeadTattooSelector.cs",
+              "DocumentMoniker": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\UI\\Window_HeadTattooSelector.cs",
+              "RelativeDocumentMoniker": "UI\\Window_HeadTattooSelector.cs",
+              "ToolTip": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\UI\\Window_HeadTattooSelector.cs",
+              "RelativeToolTip": "UI\\Window_HeadTattooSelector.cs",
+              "ViewState": "AgIAACIAAAAAAAAAAAAawD8AAABkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-09T13:52:44.326Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Window_StyleItemSelector.cs",
+              "DocumentMoniker": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\UI\\Window_StyleItemSelector.cs",
+              "RelativeDocumentMoniker": "UI\\Window_StyleItemSelector.cs",
+              "ToolTip": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\UI\\Window_StyleItemSelector.cs",
+              "RelativeToolTip": "UI\\Window_StyleItemSelector.cs",
+              "ViewState": "AgIAAFoAAAAAAAAAAAAvwEQAAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-09T13:52:44.421Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "StyleItemUtil.cs",
+              "DocumentMoniker": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\Utilities\\StyleItemUtil.cs",
+              "RelativeDocumentMoniker": "Utilities\\StyleItemUtil.cs",
+              "ToolTip": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\Utilities\\StyleItemUtil.cs",
+              "RelativeToolTip": "Utilities\\StyleItemUtil.cs",
+              "ViewState": "AgIAAB0AAAAAAAAAAAAQwD0AAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-09T13:52:44.421Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "PawnAdjustMod.cs",
+              "DocumentMoniker": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\PawnAdjustMod.cs",
+              "RelativeDocumentMoniker": "PawnAdjustMod.cs",
+              "ToolTip": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\PawnAdjustMod.cs",
+              "RelativeToolTip": "PawnAdjustMod.cs",
+              "ViewState": "AgIAACwAAAAAAAAAAAA9wEAAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-09T13:52:44.324Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "PawnAdjust",
+              "DocumentMoniker": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\PawnAdjust.csproj",
+              "RelativeDocumentMoniker": "PawnAdjust.csproj",
+              "ToolTip": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\PawnAdjust.csproj",
+              "RelativeToolTip": "PawnAdjust.csproj",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-05-09T13:52:44.419Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SettingsUtil.cs",
+              "DocumentMoniker": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\Utilities\\SettingsUtil.cs",
+              "RelativeDocumentMoniker": "Utilities\\SettingsUtil.cs",
+              "ToolTip": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\Utilities\\SettingsUtil.cs",
+              "RelativeToolTip": "Utilities\\SettingsUtil.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAD4v0wAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-09T13:52:44.325Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "AssemblyInfo.cs",
+              "DocumentMoniker": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\Properties\\AssemblyInfo.cs",
+              "RelativeDocumentMoniker": "Properties\\AssemblyInfo.cs",
+              "ToolTip": "G:\\RWModCategories\\Neronix17\\_UI\\PawnAdjust\\1.6\\Source\\PawnAdjust\\Properties\\AssemblyInfo.cs",
+              "RelativeToolTip": "Properties\\AssemblyInfo.cs",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAACIAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-09T13:52:44.42Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

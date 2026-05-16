@@ -61,40 +61,10 @@ namespace PawnAdjust
         {
             Rect rect = listing.GetRect(30f);
             quickSearchBeard.OnGUI(rect);
-            List<BeardDef> allBeardStyles = GetAllCompatibleBeardStyles(quickSearchBeard.filter.Text).ToList();
+            List<BeardDef> allBeardStyles = ITab_PawnAdjust.GetAllCompatibleBeardStyles(SelPawn, quickSearchBeard.filter.Text).ToList();
             allBeardStyles.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
             allBeardStyles.Move(BeardDefOf.NoBeard, 0);
             SelectorArray(listing, allBeardStyles);
-        }
-
-        public IEnumerable<BeardDef> GetAllCompatibleBeardStyles(string filter)
-        {
-            foreach (BeardDef beard in DefDatabase<BeardDef>.AllDefs)
-            {
-                if (CanUseBeardStyle(beard) && !beard.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, beard))
-                {
-                    yield return beard;
-                }
-            }
-            yield break;
-        }
-
-        public bool CanUseBeardStyle(BeardDef beard)
-        {
-            if(SelPawn == null) { Close(); return false; }
-            Pawn pawn = SelPawn;
-            if (ModsConfig.BiotechActive && beard.requiredGene != null)
-            {
-                if (pawn.genes == null)
-                {
-                    return false;
-                }
-                if (!pawn.genes.HasActiveGene(beard.requiredGene))
-                {
-                    return false;
-                }
-            }
-            return pawn.genes?.StyleItemAllowed(beard) ?? true;
         }
     }
 }

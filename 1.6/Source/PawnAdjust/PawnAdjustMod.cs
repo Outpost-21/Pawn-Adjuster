@@ -63,6 +63,7 @@ namespace PawnAdjust
 
         public void DoOptionsCategoryContents(Listing_Standard listing)
         {
+            listing.CheckboxEnhanced("PawnAdjust.Setting_IgnorePawnWants".Translate(), "PawnAdjust.Setting_IgnorePawnWantsDesc".Translate(), ref settings.ignorePawnsWants);
             listing.CheckboxEnhanced("PawnAdjust.Setting_LegacySubsections".Translate(), "PawnAdjust.Setting_LegacySubsectionsDesc".Translate(), ref settings.legacySubsections);
             if (listing.ButtonTextLabeled("PawnAdjust.Setting_ResetStyleWindows".Translate(), "PawnAdjust.Setting_ResetButton".Translate(), tooltip: "PawnAdjust.Setting_ResetStyleWindowsDesc".Translate()))
             {

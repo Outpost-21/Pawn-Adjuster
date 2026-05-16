@@ -61,40 +61,10 @@ namespace PawnAdjust
         {
             Rect rect = listing.GetRect(30f);
             quickSearchHair.OnGUI(rect);
-            List<HairDef> allHairStyles = GetAllCompatibleHairStyles(quickSearchHair.filter.Text).ToList();
+            List<HairDef> allHairStyles = ITab_PawnAdjust.GetAllCompatibleHairStyles(SelPawn, quickSearchHair.filter.Text).ToList();
             allHairStyles.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
             allHairStyles.Move(HairDefOf.Bald, 0);
             SelectorArray(listing, allHairStyles);
-        }
-
-        public IEnumerable<HairDef> GetAllCompatibleHairStyles(string filter)
-        {
-            foreach (HairDef hair in DefDatabase<HairDef>.AllDefs)
-            {
-                if (CanUseHairStyle(hair) && !hair.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, hair))
-                {
-                    yield return hair;
-                }
-            }
-            yield break;
-        }
-
-        public bool CanUseHairStyle(HairDef hair)
-        {
-            if (SelPawn == null) { Close(); return false; }
-            Pawn pawn = SelPawn;
-            if (ModsConfig.BiotechActive && hair.requiredGene != null)
-            {
-                if (pawn.genes == null)
-                {
-                    return false;
-                }
-                if (!pawn.genes.HasActiveGene(hair.requiredGene))
-                {
-                    return false;
-                }
-            }
-            return pawn.genes?.StyleItemAllowed(hair) ?? true;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace PawnAdjust
         public bool verboseLogging = false;
 
         public bool legacySubsections = false;
+        public bool ignorePawnsWants = false;
 
         public Vector2 hairSelectorSize = new Vector2(900f, 700f);
         public Vector2 beardSelectorSize = new Vector2(900f, 700f);

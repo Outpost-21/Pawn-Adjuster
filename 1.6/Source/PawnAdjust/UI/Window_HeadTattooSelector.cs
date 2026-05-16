@@ -61,40 +61,10 @@ namespace PawnAdjust
         {
             Rect rect = listing.GetRect(30f);
             quickSearchHeadTattoo.OnGUI(rect);
-            List<TattooDef> allTattooStyles = GetAllCompatibleTattooStyles(quickSearchHeadTattoo.filter.Text).ToList();
+            List<TattooDef> allTattooStyles = ITab_PawnAdjust.GetAllCompatibleTattooStyles(SelPawn, quickSearchHeadTattoo.filter.Text).ToList();
             allTattooStyles.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
             allTattooStyles.Move(TattooDefOf.NoTattoo_Face, 0);
             SelectorArray(listing, allTattooStyles);
-        }
-
-        public IEnumerable<TattooDef> GetAllCompatibleTattooStyles(string filter)
-        {
-            foreach (TattooDef headTat in DefDatabase<TattooDef>.AllDefs)
-            {
-                if (CanUseTattooStyle(headTat) && headTat.tattooType == TattooType.Face && !headTat.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, headTat))
-                {
-                    yield return headTat;
-                }
-            }
-            yield break;
-        }
-
-        public bool CanUseTattooStyle(TattooDef tattoo)
-        {
-            if (SelPawn == null) { Close(); return false; }
-            Pawn pawn = SelPawn;
-            if (ModsConfig.BiotechActive && tattoo.requiredGene != null)
-            {
-                if (pawn.genes == null)
-                {
-                    return false;
-                }
-                if (!pawn.genes.HasActiveGene(tattoo.requiredGene))
-                {
-                    return false;
-                }
-            }
-            return pawn.genes?.StyleItemAllowed(tattoo) ?? true;
         }
     }
 }

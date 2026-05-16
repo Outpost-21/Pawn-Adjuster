@@ -17,6 +17,8 @@
 	<PawnAdjust.StyleTags>Style Tags: </PawnAdjust.StyleTags>
 	<PawnAdjust.ModSource>Source: </PawnAdjust.ModSource>
 
+	<PawnAdjust.Setting_IgnorePawnWants>Ignore Pawns Wanted Styles</PawnAdjust.Setting_IgnorePawnWants>
+	<PawnAdjust.Setting_IgnorePawnWantsDesc>By default, listed style items are restricted to what the pawn will be happy with. Enabling this will allow you to override that, however may result in issues.</PawnAdjust.Setting_IgnorePawnWantsDesc>
 	<PawnAdjust.Setting_LegacySubsections>Legacy Subsections</PawnAdjust.Setting_LegacySubsections>
 	<PawnAdjust.Setting_LegacySubsectionsDesc>If enabled, returns the Style (Hair / Beard / Tattoo) subsections to how they used to be, inside the ITab itself instead of opening a new window for each.</PawnAdjust.Setting_LegacySubsectionsDesc>
 	<PawnAdjust.Setting_ResetStyleWindows>Reset Style Windows</PawnAdjust.Setting_ResetStyleWindows>

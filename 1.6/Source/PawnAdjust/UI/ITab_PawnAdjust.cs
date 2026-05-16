@@ -222,7 +222,7 @@ namespace PawnAdjust
             {
                 Rect rect = listing.GetRect(30f);
                 quickSearchHair.OnGUI(rect);
-                List<HairDef> allHairStyles = GetAllCompatibleHairStyles(quickSearchHair.filter.Text).ToList();
+                List<HairDef> allHairStyles = GetAllCompatibleHairStyles(SelPawn, quickSearchHair.filter.Text).ToList();
                 allHairStyles.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
                 allHairStyles.Move(HairDefOf.Bald, 0);
                 SelectorArray(listing, allHairStyles, selectorString);
@@ -239,7 +239,7 @@ namespace PawnAdjust
             {
                 Rect rect = listing.GetRect(30f);
                 quickSearchBeard.OnGUI(rect);
-                List<BeardDef> allBeardStyles = GetAllCompatibleBeardStyles(quickSearchBeard.filter.Text).ToList();
+                List<BeardDef> allBeardStyles = GetAllCompatibleBeardStyles(SelPawn, quickSearchBeard.filter.Text).ToList();
                 allBeardStyles.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
                 allBeardStyles.Move(BeardDefOf.NoBeard, 0);
                 SelectorArray(listing, allBeardStyles, selectorString);
@@ -281,7 +281,7 @@ namespace PawnAdjust
             {
                 Rect rect = listing.GetRect(30f);
                 quickSearchHeadTattoo.OnGUI(rect);
-                List<TattooDef> allTattooStyles = GetAllCompatibleTattooStyles(quickSearchHeadTattoo.filter.Text).ToList();
+                List<TattooDef> allTattooStyles = GetAllCompatibleTattooStyles(SelPawn, quickSearchHeadTattoo.filter.Text).ToList();
                 allTattooStyles.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
                 allTattooStyles.Move(TattooDefOf.NoTattoo_Face, 0);
                 SelectorArray(listing, allTattooStyles, selectorString);
@@ -298,7 +298,7 @@ namespace PawnAdjust
             {
                 Rect rect = listing.GetRect(30f);
                 quickSearchBodyTattoo.OnGUI(rect);
-                List<TattooDef> allTattooStyles = GetAllCompatibleBodyTattooStyles(quickSearchBodyTattoo.filter.Text).ToList();
+                List<TattooDef> allTattooStyles = GetAllCompatibleBodyTattooStyles(SelPawn, quickSearchBodyTattoo.filter.Text).ToList();
                 allTattooStyles.SortBy(gd => gd.modContentPack.loadOrder, gd => gd.label ?? gd.defName);
                 allTattooStyles.Move(TattooDefOf.NoTattoo_Body, 0);
                 SelectorArray(listing, allTattooStyles, selectorString);
@@ -622,11 +622,11 @@ namespace PawnAdjust
             yield break;
         }
 
-        public IEnumerable<HairDef> GetAllCompatibleHairStyles(string filter)
+        public static IEnumerable<HairDef> GetAllCompatibleHairStyles(Pawn pawn, string filter)
         {
             foreach (HairDef hair in DefDatabase<HairDef>.AllDefs)
             {
-                if (CanUseHairStyle(hair) && !hair.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, hair))
+                if (CanUseHairStyle(pawn, hair) && !hair.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, hair))
                 {
                     yield return hair;
                 }
@@ -634,9 +634,12 @@ namespace PawnAdjust
             yield break;
         }
 
-        public bool CanUseHairStyle(HairDef hair)
+        public static bool CanUseHairStyle(Pawn pawn, HairDef hair)
         {
-            Pawn pawn = SelPawn;
+            if (!WantsToUseStyle(pawn, hair))
+            {
+                return false;
+            }
             if (ModsConfig.BiotechActive && hair.requiredGene != null)
             {
                 if (pawn.genes == null)
@@ -651,11 +654,11 @@ namespace PawnAdjust
             return pawn.genes?.StyleItemAllowed(hair) ?? true;
         }
 
-        public IEnumerable<BeardDef> GetAllCompatibleBeardStyles(string filter)
+        public static IEnumerable<BeardDef> GetAllCompatibleBeardStyles(Pawn pawn, string filter)
         {
             foreach (BeardDef beard in DefDatabase<BeardDef>.AllDefs)
             {
-                if (CanUseBeardStyle(beard) && !beard.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, beard))
+                if (CanUseBeardStyle(pawn, beard) && !beard.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, beard))
                 {
                     yield return beard;
                 }
@@ -663,9 +666,12 @@ namespace PawnAdjust
             yield break;
         }
 
-        public bool CanUseBeardStyle(BeardDef beard)
+        public static bool CanUseBeardStyle(Pawn pawn, BeardDef beard)
         {
-            Pawn pawn = SelPawn;
+            if (!WantsToUseStyle(pawn, beard))
+            {
+                return false;
+            }
             if (ModsConfig.BiotechActive && beard.requiredGene != null)
             {
                 if (pawn.genes == null)
@@ -729,11 +735,11 @@ namespace PawnAdjust
             return allColors;
         }
 
-        public IEnumerable<TattooDef> GetAllCompatibleTattooStyles(string filter)
+        public static IEnumerable<TattooDef> GetAllCompatibleTattooStyles(Pawn pawn, string filter)
         {
             foreach (TattooDef headTat in DefDatabase<TattooDef>.AllDefs)
             {
-                if (CanUseTattooStyle(headTat) && headTat.tattooType == TattooType.Face && !headTat.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, headTat))
+                if (CanUseTattooStyle(pawn, headTat) && headTat.tattooType == TattooType.Face && !headTat.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, headTat))
                 {
                     yield return headTat;
                 }
@@ -741,9 +747,12 @@ namespace PawnAdjust
             yield break;
         }
 
-        public bool CanUseTattooStyle(TattooDef tattoo)
+        public static bool CanUseTattooStyle(Pawn pawn, TattooDef tattoo)
         {
-            Pawn pawn = SelPawn;
+            if (!WantsToUseStyle(pawn, tattoo))
+            {
+                return false;
+            }
             if (ModsConfig.BiotechActive && tattoo.requiredGene != null)
             {
                 if (pawn.genes == null)
@@ -758,11 +767,11 @@ namespace PawnAdjust
             return pawn.genes?.StyleItemAllowed(tattoo) ?? true;
         }
 
-        public IEnumerable<TattooDef> GetAllCompatibleBodyTattooStyles(string filter)
+        public static IEnumerable<TattooDef> GetAllCompatibleBodyTattooStyles(Pawn pawn, string filter)
         {
             foreach (TattooDef bodyTat in DefDatabase<TattooDef>.AllDefs)
             {
-                if (CanUseBodyTattooStyle(bodyTat) && bodyTat.tattooType == TattooType.Body && !bodyTat.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, bodyTat))
+                if (CanUseBodyTattooStyle(pawn, bodyTat) && bodyTat.tattooType == TattooType.Body && !bodyTat.HasModExtension<DefModExt_HideInAdjuster>() && StyleItemUtil.FitsFilter(filter, bodyTat))
                 {
                     yield return bodyTat;
                 }
@@ -770,9 +779,12 @@ namespace PawnAdjust
             yield break;
         }
 
-        public bool CanUseBodyTattooStyle(TattooDef tattoo)
+        public static bool CanUseBodyTattooStyle(Pawn pawn, TattooDef tattoo)
         {
-            Pawn pawn = SelPawn;
+            if (!WantsToUseStyle(pawn, tattoo)) 
+            {
+                return false;
+            }
             if (ModsConfig.BiotechActive && tattoo.requiredGene != null)
             {
                 if (pawn.genes == null)
@@ -785,6 +797,19 @@ namespace PawnAdjust
                 }
             }
             return pawn.genes?.StyleItemAllowed(tattoo) ?? true;
+        }
+
+        public static bool WantsToUseStyle(Pawn pawn, StyleItemDef styleItem)
+        {
+            if (PawnAdjustMod.settings.ignorePawnsWants)
+            {
+                return true;
+            }
+            if (PawnStyleItemChooser.WantsToUseStyle(pawn, styleItem))
+            {
+                return true;
+            }
+            return false;
         }
 
         #region Selector: Quick Cheats
